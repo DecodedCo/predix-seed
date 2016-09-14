@@ -70,12 +70,10 @@ var server = app.listen(process.env.VCAP_APP_PORT || 5000, function () {
 SET UP MOCK API ROUTES
 *******************************************************/
 // Import route modules
-var viewServiceRoutes = require('./view-service-routes.js')();
 var assetRoutes = require('./predix-asset-routes.js')();
 var timeSeriesRoutes = require('./time-series-routes.js')();
 
 // add mock API routes.  (Remove these before deploying to production.)
-app.use('/api/view-service', jsonServer.router(viewServiceRoutes));
 app.use('/api/predix-asset', jsonServer.router(assetRoutes));
 app.use('/api/time-series', jsonServer.router(timeSeriesRoutes));
 
