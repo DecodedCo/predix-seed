@@ -6,7 +6,7 @@ applications:
     command: node server/app.js
 services:
   - xlpuser04-uaa
- # - <your-name>-timeseries-instance
+  - xlpuser04-timeseries
  # - <your-name>-asset-instance
 env:
     node_env: cloud

@@ -55,10 +55,9 @@ You can give the app any unique name you like.  "my-seed-app" is just an example
 
 # 1. Setup UAA service
 1. `cf create-service predix-uaa Tiered xlpuser04-uaa -c '{"adminClientSecret":"clientsecret"}'`
-2. `cf bind-service xlp-polymer xlpuser04-uaa`
-3. `cf restage xlp-polymer`
-4. Add `xlpuser-04-uaa` to `manifest.yml` (duplicative of step 2?)
-5. `cf env xlp-polymer` to extra <uaa-URI>
+2. Add `xlpuser-04-uaa` to `manifest.yml`
+3. `cf push`
+4. `cf env xlp-polymer` to extract <uaa-URI>
 
 # 2. Add client for UAA
 1. `uaac target <uaa-URI>`
@@ -74,10 +73,14 @@ You can give the app any unique name you like.  "my-seed-app" is just an example
 1. `uaac user add <my-user> --emails <my_user>@domain.com --password <my_password>`
 2. `uaac group add uaa.user`
 3. `uaac member add uaa.user user`
-4. 
 
 ### Predix Time series
-_TODO_
+
+# 1. Create Service
+
+1. `cf env xlp-polymer` - grab issuer id from uaa
+2. `cf create-service predix-timeseries Tiered xlpuser04-timeseries -c '{"trustedIssuerIds":["https://xxx.run.aws-usw02-pr.ice.predix.io/oauth/token"]}'`
+3. Update manifest.yml with timeseries instance, `cf push`
 
 ## Questions?
 - Ask questions and file tickets on <a href="https://www.predix.io/community" target="_blank">https://www.predix.io/community</a>.
