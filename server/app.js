@@ -102,18 +102,9 @@ if (uaaIsConfigured) {
   app.get('/callback', passport.authenticate('predix', {
   	failureRedirect: '/'
   }), function(req, res) {
-  	console.log('Redirecting to secure route...');
-  	res.redirect('/secure');
+  	console.log('Redirecting to front page');
+  	res.redirect('/');
     });
-
-  //secure route checks for authentication
-  app.get('/secure', passport.authenticate('main', {
-  	noredirect: false //Don't redirect a user to the authentication page, just show an error
-    }), function(req, res) {
-  	console.log('Accessing the secure route');
-    // modify this to send a secure.html file if desired.
-  	res.send('<h2>This is a sample secure route.</h2>');
-  });
 
   //secure route checks for authentication
   app.use('/', passport.authenticate('main', {
