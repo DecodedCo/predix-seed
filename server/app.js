@@ -66,8 +66,6 @@ var server = app.listen(process.env.VCAP_APP_PORT || 5000, function () {
 	console.log ('Server started on port: ' + server.address().port);
 });
 
-app.use(express.static(path.join(__dirname, '../public')));
-
 /*******************************************************
 SET UP MOCK API ROUTES
 *******************************************************/
@@ -110,12 +108,19 @@ if (uaaIsConfigured) {
 
   //secure route checks for authentication
   app.get('/secure', passport.authenticate('main', {
-  	noredirect: true //Don't redirect a user to the authentication page, just show an error
+  	noredirect: false //Don't redirect a user to the authentication page, just show an error
     }), function(req, res) {
   	console.log('Accessing the secure route');
     // modify this to send a secure.html file if desired.
   	res.send('<h2>This is a sample secure route.</h2>');
   });
+
+  //secure route checks for authentication
+  app.use('/', passport.authenticate('main', {
+    noredirect: false //Don't redirect a user to the authentication page, just show an error
+    }),
+    express.static(path.join(__dirname, '../public'))
+  );
 }
 
 //logout route
