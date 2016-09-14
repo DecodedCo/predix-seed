@@ -5,9 +5,7 @@
     "uaaURL": "https://98742169-b2e0-452a-80b7-b39b2b7a66c2.predix-uaa.run.aws-usw02-pr.ice.predix.io",
     "base64ClientCredential": "eGxwdXNlcjA0LXVhYS1jbGllbnQ6Y2xpZW50LXNlY3JldA==",
     "appURL": "http://localhost:5000",
-    "timeseriesURL": "{Time Series URL from VCAPS}",
-    "timeseriesZoneId": "{The Zone ID for the Timeseries Service Created}",
-    "assetURL": "{Asset URL from VCAPS}",
-    "assetZoneId": "{The Zone ID for the Asset Service Created}"
+    "timeseriesURL": "https://time-series-store-predix.run.aws-usw02-pr.ice.predix.io/v1/datapoints",
+    "timeseriesZoneId": "13bf79cf-27e6-4dd2-a0a6-b8bef2152c2a"
   }
 }
