@@ -91,6 +91,11 @@ You can give the app any unique name you like.  "my-seed-app" is just an example
   2. scope:
 `timeseries.zones.<zone-id>.user timeseries.zones.<zone-id>.query timeseries.zones.<zone-id>.ingest`
 
+# 3. Use Timeseries
+
+1. Simply access `/predix-api/predix-timeseries/v1/tags..`
+2. To test with curl, copy the `cookie_name` from your browser and `curl --cookie "cookie_name=xxxx" http://localhost:5000/predix-api/predix-timeseries/v1/tags`
+
 ## Predix Machine
 
 On the Pis, update the following:
