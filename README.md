@@ -91,6 +91,14 @@ You can give the app any unique name you like.  "my-seed-app" is just an example
   2. scope:
 `timeseries.zones.<zone-id>.user timeseries.zones.<zone-id>.query timeseries.zones.<zone-id>.ingest`
 
+## Predix Machine
+
+On the Pis, update the following:
+
+1. `~/PredixMachine/configuration/machine/com.ge.dspmicro.predixcloud.identity.config` with UAA details
+2. `com.ge.dspmicro.websocketriver.send-0.config` with Zone ID for TS
+3. `com.ge.dspmicro.hoover.spillway-0.config` updated `com.ge.dspmicro.hoover.spillway.destination="WS Sender Service"`
+
 ## Questions?
 - Ask questions and file tickets on <a href="https://www.predix.io/community" target="_blank">https://www.predix.io/community</a>.
 
