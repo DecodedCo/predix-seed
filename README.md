@@ -82,6 +82,23 @@ You can give the app any unique name you like.  "my-seed-app" is just an example
 2. `cf create-service predix-timeseries Tiered xlpuser04-timeseries -c '{"trustedIssuerIds":["https://xxx.run.aws-usw02-pr.ice.predix.io/oauth/token"]}'`
 3. Update manifest.yml with timeseries instance, `cf push`
 
+# 2. Config Service
+
+1. `cf env xlp-polymer` - grab zone id
+2. `uaac client update xlpuser04-uaa-client -i` add
+  1. authorities:
+`timeseries.zones.<zone-id>.user timeseries.zones.<zone-id>.query timeseries.zones.<zone-id>.ingest`
+  2. scope:
+`timeseries.zones.<zone-id>.user timeseries.zones.<zone-id>.query timeseries.zones.<zone-id>.ingest`
+
+## Predix Machine
+
+On the Pis, update the following:
+
+1. `~/PredixMachine/configuration/machine/com.ge.dspmicro.predixcloud.identity.config` with UAA details
+2. `com.ge.dspmicro.websocketriver.send-0.config` with Zone ID for TS
+3. `com.ge.dspmicro.hoover.spillway-0.config` updated `com.ge.dspmicro.hoover.spillway.destination="WS Sender Service"`
+
 ## Questions?
 - Ask questions and file tickets on <a href="https://www.predix.io/community" target="_blank">https://www.predix.io/community</a>.
 
