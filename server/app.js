@@ -124,22 +124,6 @@ app.get('/favicon.ico', function (req, res) {
 	res.send('favicon.ico');
 });
 
-// Sample route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   login page.
-//currently not being used as we are using passport-oauth2-middleware to check if
-//token has expired
-/*
-function ensureAuthenticated(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/');
-}
-*/
-
 ////// error handlers //////
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

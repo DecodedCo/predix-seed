@@ -31,6 +31,7 @@ var uaaURL = (function() {
 	}
 	return uaaURL;
 }) ();
+
 console.log('clientId: ' + clientId);
 console.log('base64ClientCredential: ' + base64ClientCredential);
 console.log('uaaURL: ' + uaaURL);
@@ -131,7 +132,7 @@ var setProxyRoute = function(key, credentials) {
 	router.use('/' + key, expressProxy(routeOptions.serviceEndpoint, {
 		https: true,
 		forwardPath: function (req) {
-			console.log('req.url: ' + req.url);
+			console.log('proxy req.url: ' + req.url);
 			return req.url;
 		},
 		intercept: cleanResponseHeaders,
