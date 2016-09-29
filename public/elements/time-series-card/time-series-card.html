@@ -1,30 +1,72 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/px-card/px-card.html">
 <link rel="import" href="/bower_components/px-vis-timeseries/px-vis-timeseries.html">
+<link rel="import" href="/bower_components/px-vis/px-vis-data.html">
+<link rel="import" href="/bower_components/px-vis/px-vis-data-converter.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
 <!-- <script type="text/javascript" src="/bower_components/px/dist/px.min.js"></script> -->
 
 <dom-module id="time-series-card">
   <template>
-    <px-card header-text="Time Series Card">
-      <px-vis-timeseries
+    <iron-ajax
+          auto
+          method="POST"
+          url="/predix-api/predix-timeseries/v1/datapoints"
+          body="{{timeseriesBody}}"
+          handle-as="json"
+          content-type="application/json"
+          last-response="{{data}}"
+          on-response="_parseTSData"
+    ></iron-ajax>
+    <iron-ajax
+          id="latestPoint"
+          auto
+          method="POST"
+          url="/predix-api/predix-timeseries/v1/datapoints/latest"
+          handle-as="json"
+          body="[[latestPointBody]]"
+          content-type="application/json"
+          last-response="{{latest}}"
+          on-response="_onResponse"
+    ></iron-ajax>
+    <iron-ajax
+          auto
+          method="GET"
+          url="/predix-api/predix-timeseries/v1/tags"
+          handle-as="json"
+          content-type="application/json"
+          last-response="{{tags.results}}"
+    ></iron-ajax>
+
+    <px-card header-text="Time Series Card - [[latestTSPoint]]">
+      <px-chart>
+        <px-chart-series-bar
+          parent-component='["<px-chart>","</px-chart>"]'
+          id="timeseriesBar"
+          name="[[tags.0]]"
+          marker='{"enabled":false,"radius":15}'
+          data="{{tsData}}">
+        </px-chart-series-bar>
+      </px-chart>
+
+      <!-- <px-vis-timeseries
         width="800"
         height="300"
         prevent-resize="true"
-        enable-tooltip="true"
-        register-location="none"
+        register-location="side"
         include-all-series
         selection-type= "xy"
-        chart-data="[[chartData2.data]]">
-      </px-vis-timeseries>
-      <px-vis-data
-        id="seriesAjax"
-        request-data = '[{ "url": "/api/time-series/delta-egt/1" }]'
-        data-var="chartData2"
-        lists="flat"
-        response-data="{{chartData2}}">
-      </px-vis-data>
+        chart-data="[[data.tags.0.results.0.values]]">
+       </px-vis-timeseries> -->
+
+<!--      <px-vis-data-converter
+        original-data="[[data.tags.0.results]]"
+        chart-data="{{convertedData}}"
+        data-key="values"
+
+      >
+    </px-vis-data-converter> -->
     </px-card>
   </template>
 </dom-module>
@@ -32,7 +74,55 @@
   Polymer({
     is: 'time-series-card',
     properties: {
-
+      timeseriesBody: {
+        type:Object,
+        value:{
+            "start": 1473899027861,
+            "end": 1483890003000,
+            "tags": [
+                {
+                    "name": [
+                        "Temperature-xlp-trainer-03"
+                    ]
+                }
+            ]
+        }
+      },
+      latestPointBody: {
+        type:Object,
+        value:{
+          "tags": [
+            {
+              "name": [
+                "Temperature-xlp-trainer-03"
+              ]
+            }
+          ]
+        }
+      },
+      latestTSPoint: {
+        type: Number
+      },
+      tsData: {
+        type: Array,
+        value: []
+      },
+      tagName: {
+        type: String,
+        value: "Temperature-xlp-trainer-03"
+      }
+    },
+    _updateData: function(){
+      this.async(function() {
+        this.$.latestPoint.generateRequest();
+      }, 10000);
+    },
+    _onResponse: function(e, details) {
+      this._updateData();
+      this.latestTSPoint = details.response.tags[0].results[0].values[0][1]; // latest.tags.0.results.0.values.0.1
+    },
+    _parseTSData: function(e, details) {
+      this.tsData = details.response.tags[0].results[0].values;
     }
   });
 </script>
