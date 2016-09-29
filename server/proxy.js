@@ -132,7 +132,7 @@ var setProxyRoute = function(key, credentials) {
 	router.use('/' + key, expressProxy(routeOptions.serviceEndpoint, {
 		https: true,
 		forwardPath: function (req) {
-			console.log('proxy req.url: ' + req.url);
+			// console.log('proxy req.url: ' + req.url);
 			return req.url;
 		},
 		intercept: cleanResponseHeaders,
