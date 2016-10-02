@@ -9,6 +9,7 @@ public/elements/seed-app/seed-app-styles.html
 public/elements/seed-footer/seed-footer-styles.html
 public/elements/three-widgets-card/three-widgets-card-styles.html
 public/typography-styles.html
+public/elements/*/*-styles.html
 dist/public
 dist/www
 .idea

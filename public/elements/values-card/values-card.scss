@@ -1,0 +1,9 @@
+.layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.layout__item {
+  flex-basis: 20%;
+}

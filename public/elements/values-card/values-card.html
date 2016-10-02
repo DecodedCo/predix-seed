@@ -1,3 +1,5 @@
+<link rel="import" href="values-card-styles.html">
+
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/px-card/px-card.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
@@ -6,9 +8,12 @@
 
 <dom-module id="values-card">
   <template>
+
+    <!-- apply imported style module -->
+    <style include="values-card-styles"></style>
     <iron-ajax
-          id="getLatestPoint"
-          auto
+          id="stuff"
+          auto="false"
           method="POST"
           url="/predix-api/predix-timeseries/v1/datapoints/latest"
           handle-as="json"
@@ -17,7 +22,7 @@
           last-response="{{latest}}"
           on-response="_onResponse"
     ></iron-ajax>
-    <!-- <iron-ajax
+    <iron-ajax
           id="getTags"
           auto
           method="GET"
@@ -26,10 +31,16 @@
           content-type="application/json"
           last-response="{{tags.results}}"
           on-response="_tagResponse"
-    ></iron-ajax> -->
+    ></iron-ajax>
 
     <px-card header-text="Real Time Dashboard">
-      [[tagName]] : [[latestTSPoint]]
+      <div class="layout">
+        <template is="dom-repeat" items="{{tagsData}}">
+            <div class="layout__item">[[item.name]] <br>
+              <h2 style="display:inline-block">[[item.results.0.values.0.1]]</h2>
+            </div>
+        </template>
+      </div>
     </px-card>
   </template>
 </dom-module>
@@ -39,36 +50,57 @@
     properties: {
       latestPointBody: {
         type:Object,
-        value:{
-          "tags": [
-            {
-              "name": [
-                "Temperature-xlp-trainer-03"
-              ]
-            }
-          ]
-        }
+        /////// Use this body if you want to hard code the tags you want, otherwise keep all!
+        // value: {
+        //   "tags": [
+        //     {
+        //       "name": [
+        //         "CoalPower-xlp-04"
+        //       ]
+        //     }
+        //   ]
+        // }
       },
       latestTSPoint: {
         type: Number
       },
       tagName: {
         type: String
+      },
+      tags: {
+        type: Array,
+        value:[]
+      },
+      tagsData: {
+        type: Array,
+        value: []
       }
     },
     _updateData: function(){
       this.async(function() {
-        this.$.getLatestPoint.generateRequest();
+        this.$.stuff.generateRequest();
       }, 10000);
     },
     _onResponse: function(e, details) {
       this._updateData();
+      this.tagsData = details.response.tags;
       this.tagName = details.response.tags[0].name;
       this.latestTSPoint = details.response.tags[0].results[0].values[0][1]; // latest.tags.0.results.0.values.0.1
     },
-    // _tagResponse: function(e, details){
-    //   this.tagName = details.response.results[0];
-    //   this.$.getTimeseries.generateRequest();
-    // }
+    _tagResponse: function(e, details){
+      let tags = details.response.results;
+      let component = this;
+      tags.forEach(function(tag){
+        if(tag.indexOf('04')!== -1){   ///Change this value!!?
+          component.tags.push({
+            name: [ tag ]
+          });
+        }
+      });
+      this.latestPointBody = {
+        "tags": this.tags
+      };
+      this.$.stuff.generateRequest();
+    }
   });
 </script>
