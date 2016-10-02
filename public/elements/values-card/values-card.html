@@ -1,0 +1,74 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/px-card/px-card.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+
+<!-- <script type="text/javascript" src="/bower_components/px/dist/px.min.js"></script> -->
+
+<dom-module id="values-card">
+  <template>
+    <iron-ajax
+          id="getLatestPoint"
+          auto
+          method="POST"
+          url="/predix-api/predix-timeseries/v1/datapoints/latest"
+          handle-as="json"
+          body="[[latestPointBody]]"
+          content-type="application/json"
+          last-response="{{latest}}"
+          on-response="_onResponse"
+    ></iron-ajax>
+    <!-- <iron-ajax
+          id="getTags"
+          auto
+          method="GET"
+          url="/predix-api/predix-timeseries/v1/tags"
+          handle-as="json"
+          content-type="application/json"
+          last-response="{{tags.results}}"
+          on-response="_tagResponse"
+    ></iron-ajax> -->
+
+    <px-card header-text="Real Time Dashboard">
+      [[tagName]] : [[latestTSPoint]]
+    </px-card>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'values-card',
+    properties: {
+      latestPointBody: {
+        type:Object,
+        value:{
+          "tags": [
+            {
+              "name": [
+                "Temperature-xlp-trainer-03"
+              ]
+            }
+          ]
+        }
+      },
+      latestTSPoint: {
+        type: Number
+      },
+      tagName: {
+        type: String
+      }
+    },
+    _updateData: function(){
+      this.async(function() {
+        this.$.getLatestPoint.generateRequest();
+      }, 10000);
+    },
+    _onResponse: function(e, details) {
+      this._updateData();
+      this.tagName = details.response.tags[0].name;
+      this.latestTSPoint = details.response.tags[0].results[0].values[0][1]; // latest.tags.0.results.0.values.0.1
+    },
+    // _tagResponse: function(e, details){
+    //   this.tagName = details.response.results[0];
+    //   this.$.getTimeseries.generateRequest();
+    // }
+  });
+</script>
