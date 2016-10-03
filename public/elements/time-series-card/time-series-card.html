@@ -65,16 +65,13 @@
           data="{{tsData}}">
         </px-chart-series-bar>
       </px-chart>
-
       <px-vis-timeseries
-        width="1100"
-        height="600"
-        prevent-resize="false"
-        include-all-series
-        register-location="side"
-        selection-type= "xy"
-        chart-data="{{tsData}}">
-       </px-vis-timeseries>
+          height="300"
+          include-all-series
+          register-location="top"
+          selection-type= "xy"
+          chart-data="{{tsData}}">
+      </px-vis-timeseries>
     </px-card>
   </template>
 </dom-module>
