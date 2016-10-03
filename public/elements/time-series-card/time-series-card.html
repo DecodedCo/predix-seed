@@ -3,6 +3,7 @@
 <link rel="import" href="/bower_components/px-vis-timeseries/px-vis-timeseries.html">
 <link rel="import" href="/bower_components/px-vis/px-vis-data.html">
 <link rel="import" href="/bower_components/px-vis/px-vis-data-converter.html">
+<link rel="import" href="/bower_components/px-rangepicker/px-rangepicker.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
 <!-- <script type="text/javascript" src="/bower_components/px/dist/px.min.js"></script> -->
@@ -11,7 +12,7 @@
   <template>
     <iron-ajax
           id="getTimeseries"
-          auto=false
+          auto
           method="POST"
           url="/predix-api/predix-timeseries/v1/datapoints"
           body="{{timeseriesBody}}"
@@ -21,9 +22,8 @@
           on-response="_parseTSData"
     ></iron-ajax>
     <!-- Add in for "real time charts" -->
-    <!-- <iron-ajax
+    <iron-ajax
           id="getLatestPoint"
-          auto
           method="POST"
           url="/predix-api/predix-timeseries/v1/datapoints/latest"
           handle-as="json"
@@ -31,7 +31,7 @@
           content-type="application/json"
           last-response="{{latest}}"
           on-response="_onResponse"
-    ></iron-ajax> -->
+    ></iron-ajax>
     <!-- <iron-ajax
           id="getTags"
           auto
@@ -44,6 +44,14 @@
     ></iron-ajax> -->
 
     <px-card header-text="Time Series Card [[tagName]]">
+      <px-rangepicker
+          range='{"from":"2016-01-01T01:00:00.000Z","to":"2016-07-01T11:00:00.000Z"}'
+          date-format="YYYY/MM/DD"
+          time-format="hh:mm:ss A"
+          show-buttons="true"
+          show-time-zone="text"
+          time-zone="UTC">
+      </px-rangepicker>
       <px-chart>
         <px-chart-series-bar
           parent-component='["<px-chart>","</px-chart>"]'
@@ -84,39 +92,42 @@
             ]
         }
       },
-      // latestPointBody: {
-      //   type:Object,
-      //   value:{
-      //     "tags": [
-      //       {
-      //         "name": [
-      //           "Temperature-xlp-trainer-03"
-      //         ]
-      //       }
-      //     ]
-      //   }
-      // },
-      // latestTSPoint: {
-      //   type: Number
-      // },
+      latestPointBody: {
+        type:Object,
+        value:{
+          "tags": [
+            {
+              "name": [
+                "CoalPower-xlp-04"
+              ]
+            }
+          ]
+        }
+      },
       tsData: {
         type: Array,
         value: []
       },
       tagName: {
         type: String
-        //value: "Temperature-xlp-trainer-03"
       }
     },
-    // _updateData: function(){
-    //   this.async(function() {
-    //     this.$.getLatestPoint.generateRequest();
-    //   }, 10000);
-    // },
-    // _onResponse: function(e, details) {
-    //   this._updateData();
-    //   this.latestTSPoint = details.response.tags[0].results[0].values[0][1]; // latest.tags.0.results.0.values.0.1
-    // },
+    _updateData: function(){
+      this.async(function() {
+        this.$.getLatestPoint.generateRequest();
+      }, 10000);
+    },
+    _onResponse: function(e, details) {
+      this._updateData();
+      let latestPoint = details.response.tags[0].results[0].values[0];
+      latestPoint = {
+        x: latestPoint[0],
+        y: latestPoint[1]
+      }
+      this.tsData.push(latestPoint);
+      this.tsData.shift();
+      this.set('tsData', this.tsData);
+    },
     _parseTSData: function(e, details) {
       let data = details.response.tags[0].results[0].values;
       let arr = [];
@@ -129,7 +140,7 @@
         arr.push(point);
       });
       this.set('tsData', arr);
-
+      //this.$.getLatestPoint.generateRequest()
     }
   });
 </script>
