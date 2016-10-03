@@ -45,12 +45,16 @@
 
     <px-card header-text="Time Series Card [[tagName]]">
       <px-rangepicker
+          id="tsRangePicker"
+          block-future-dates="true"
           range='{"from":"2016-01-01T01:00:00.000Z","to":"2016-07-01T11:00:00.000Z"}'
           date-format="YYYY/MM/DD"
           time-format="hh:mm:ss A"
           show-buttons="true"
           show-time-zone="text"
-          time-zone="UTC">
+          time-zone="UTC"
+          hide-presets="true"
+          >
       </px-rangepicker>
       <px-chart>
         <px-chart-series-bar
@@ -112,6 +116,12 @@
         type: String
       }
     },
+    ready: function ready(){
+      this.$.tsRangePicker.addEventListener('px-datetime-range-submitted', () => {
+        this._dateRangeChanged();
+        this.$.getTimeseries.generateRequest();
+      });
+    },
     _updateData: function(){
       this.async(function() {
         this.$.getLatestPoint.generateRequest();
@@ -141,6 +151,22 @@
       });
       this.set('tsData', arr);
       //this.$.getLatestPoint.generateRequest()
+    },
+    _dateRangeChanged: function(){
+      let start = +new Date(this.$.tsRangePicker.range.from);
+      let end = +new Date(this.$.tsRangePicker.range.to);
+
+      this.timeseriesBody = {
+        "start": start,
+        "end": end,
+        "tags": [
+            {
+                "name": [
+                    "CoalPower-xlp-04"
+                ]
+            }
+        ]
+      };
     }
   });
 </script>
