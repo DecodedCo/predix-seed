@@ -35,9 +35,9 @@
 
     <px-card header-text="Real Time Dashboard">
       <div class="layout">
-        <template is="dom-repeat" items="{{tagsData}}">
+        <template is="dom-repeat" items="{{tagsData}}" filter="round">
             <div class="layout__item">[[item.name]] <br>
-              <h2 style="display:inline-block">[[item.results.0.values.0.1]]</h2>
+              <h2 style="display:inline-block" filter="round">[[item.results.0.values.0.1]]</h2>
             </div>
         </template>
       </div>
@@ -101,6 +101,10 @@
         "tags": this.tags
       };
       this.$.stuff.generateRequest();
+    },
+    round: function(item) {
+      item.results[0].values[0][1] = Math.round(item.results[0].values[0][1]);
+      return item;
     }
   });
 </script>
