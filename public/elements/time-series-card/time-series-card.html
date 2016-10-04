@@ -33,28 +33,32 @@
           on-response="_onResponse"
     ></iron-ajax>
 
-    <px-card header-text="Time Series Card [[tagName]]">
-      <px-rangepicker
-          id="tsRangePicker"
-          block-future-dates="true"
-          range='{"from":"2016-01-01T01:00:00.000Z","to":"2016-07-01T11:00:00.000Z"}'
-          date-format="YYYY/MM/DD"
-          time-format="hh:mm:ss A"
-          show-buttons="true"
-          show-time-zone="text"
-          time-zone="UTC"
-          hide-presets="true"
-          >
-      </px-rangepicker>
-      <px-dropdown display-value="Text">
-        <px-dropdown-content class="px-dropdown-content"
-          extend-dropdown="true"
-          extend-dropdown-by="25"
-          max-cont-character-width="10"
-          items='[[tags]]'
-          >
-        </px-dropdown-content>
-      </px-dropdown>
+    <px-card header-text="Time Series Card">
+      <div style="margin-bottom:1em;">
+        <px-rangepicker
+            style="width: 60%;display:inline-block;"
+            id="tsRangePicker"
+            block-future-dates="true"
+            range='{"from":"2016-01-01T01:00:00.000Z","to":"2016-07-01T11:00:00.000Z"}'
+            date-format="YYYY/MM/DD"
+            time-format="hh:mm:ss A"
+            show-buttons="true"
+            show-time-zone="text"
+            time-zone="UTC"
+            hide-presets="true"
+            >
+        </px-rangepicker>
+        <px-dropdown id="dropdown"
+          display-value="[[tagName]]" style="width: 20%;display:inline-block;float:right;">
+          <px-dropdown-content class="px-dropdown-content"
+            extend-dropdown="true"
+            extend-dropdown-by="25"
+            max-cont-character-width="10"
+            items='[[tags]]'
+            >
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
       <px-chart>
         <px-chart-series-bar
           parent-component='["<px-chart>","</px-chart>"]'
@@ -109,13 +113,18 @@
         this._dateRangeChanged();
         this.$.getTimeseries.generateRequest();
       });
+
+      this.$.dropdown.addEventListener('dropdown_content_value_changed', (e) => {
+        this._tagChange(e.detail.textValue);
+
+      });
     },
     _tags: function(){
       if(this.tags.length > 0){
-        this._setBodies(this.tags[0]);
+        this._tagChange(this.tags[0]);
       }
     },
-    _setBodies: function(tag){
+    _tagChange: function(tag){
       this.tagName = tag;
       this.timeseriesBody.tags = [
         {
