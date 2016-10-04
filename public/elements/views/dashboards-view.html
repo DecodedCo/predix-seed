@@ -18,9 +18,19 @@
 
     <script type="text/javascript" src="../../bower_components/es6-promise/es6-promise.min.js"></script>
 
-    <values-card></values-card>
-    <scatter-plot-card></scatter-plot-card>
-    <time-series-card></time-series-card>
+    <iron-ajax
+          id="getTags"
+          auto
+          method="GET"
+          url="/predix-api/predix-timeseries/v1/tags"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_tagResponse"
+    ></iron-ajax>
+
+    <values-card tags="[[tags]]"></values-card>
+    <!-- <scatter-plot-card></scatter-plot-card>
+    <time-series-card></time-series-card> -->
 
   </template>
   <script>
@@ -29,11 +39,31 @@
       is: 'dashboards-view',
 
       properties: {
-
+        tags: {
+          type: Object,
+          value: {}
+        }
       },
 
       ready: function ready() {
         var _this = this;
+
+      },
+      _tagResponse: function(e, details){
+        let tags = details.response.results;
+        let component = {
+          tags: []
+        };
+        tags.forEach(function(tag){
+          if(tag.indexOf('09')!== -1){   ///Change this value!!?
+            component.tags.push({
+              name: [ tag ]
+            });
+          }
+        });
+        this.tags = {
+          "tags": component.tags
+        };
       }
 
     });

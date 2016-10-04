@@ -22,16 +22,6 @@
           last-response="{{latest}}"
           on-response="_onResponse"
     ></iron-ajax>
-    <iron-ajax
-          id="getTags"
-          auto
-          method="GET"
-          url="/predix-api/predix-timeseries/v1/tags"
-          handle-as="json"
-          content-type="application/json"
-          last-response="{{tags.results}}"
-          on-response="_tagResponse"
-    ></iron-ajax>
 
     <px-card header-text="Real Time Dashboard">
       <div class="layout">
@@ -68,12 +58,19 @@
         type: String
       },
       tags: {
-        type: Array,
-        value:[]
+        type: Object,
+        value: {},
+        observer: '_tagsChanged'
       },
       tagsData: {
         type: Array,
         value: []
+      }
+    },
+    _tagsChanged: function ready(){
+      if(Object.keys(this.tags).length > 0){
+        this.latestPointBody = this.tags;
+        this.$.stuff.generateRequest();
       }
     },
     _updateData: function(){
@@ -86,21 +83,6 @@
       this.tagsData = details.response.tags;
       this.tagName = details.response.tags[0].name;
       this.latestTSPoint = details.response.tags[0].results[0].values[0][1]; // latest.tags.0.results.0.values.0.1
-    },
-    _tagResponse: function(e, details){
-      let tags = details.response.results;
-      let component = this;
-      tags.forEach(function(tag){
-        if(tag.indexOf('09')!== -1){   ///Change this value!!?
-          component.tags.push({
-            name: [ tag ]
-          });
-        }
-      });
-      this.latestPointBody = {
-        "tags": this.tags
-      };
-      this.$.stuff.generateRequest();
     },
     round: function(item) {
       item.results[0].values[0][1] = Math.round(item.results[0].values[0][1]);
