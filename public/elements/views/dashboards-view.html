@@ -34,6 +34,10 @@
 
   </template>
   <script>
+
+    // This is the device name you are using
+    var deviceName = 'trainer-03';
+
     Polymer({
 
       is: 'dashboards-view',
@@ -60,7 +64,7 @@
         };
 
         tags.forEach((tag) => {
-          if(tag.indexOf('09')!== -1){   ///Change this value!!?
+          if(tag.indexOf(deviceName)!== -1){
             temp.push(tag);
             component.tags.push({
               name: [ tag ]
