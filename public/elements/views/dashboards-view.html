@@ -29,8 +29,8 @@
     ></iron-ajax>
 
     <values-card tags="[[tags]]"></values-card>
-    <!-- <scatter-plot-card></scatter-plot-card>
-    <time-series-card></time-series-card> -->
+    <!-- <scatter-plot-card></scatter-plot-card>-->
+    <time-series-card tags="[[tagVals]]"></time-series-card>
 
   </template>
   <script>
@@ -42,6 +42,9 @@
         tags: {
           type: Object,
           value: {}
+        },
+        tagVals: {
+          type: Array
         }
       },
 
@@ -51,11 +54,14 @@
       },
       _tagResponse: function(e, details){
         let tags = details.response.results;
+        let temp = [];
         let component = {
           tags: []
         };
-        tags.forEach(function(tag){
+
+        tags.forEach((tag) => {
           if(tag.indexOf('09')!== -1){   ///Change this value!!?
+            temp.push(tag);
             component.tags.push({
               name: [ tag ]
             });
@@ -64,6 +70,7 @@
         this.tags = {
           "tags": component.tags
         };
+        this.tagVals = temp;
       }
 
     });

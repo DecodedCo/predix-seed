@@ -4,6 +4,7 @@
 <link rel="import" href="/bower_components/px-vis/px-vis-data.html">
 <link rel="import" href="/bower_components/px-vis/px-vis-data-converter.html">
 <link rel="import" href="/bower_components/px-rangepicker/px-rangepicker.html">
+<link rel="import" href="/bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
 <!-- <script type="text/javascript" src="/bower_components/px/dist/px.min.js"></script> -->
@@ -12,7 +13,6 @@
   <template>
     <iron-ajax
           id="getTimeseries"
-          auto
           method="POST"
           url="/predix-api/predix-timeseries/v1/datapoints"
           body="{{timeseriesBody}}"
@@ -32,16 +32,6 @@
           last-response="{{latest}}"
           on-response="_onResponse"
     ></iron-ajax>
-    <!-- <iron-ajax
-          id="getTags"
-          auto
-          method="GET"
-          url="/predix-api/predix-timeseries/v1/tags"
-          handle-as="json"
-          content-type="application/json"
-          last-response="{{tags.results}}"
-          on-response="_tagResponse"
-    ></iron-ajax> -->
 
     <px-card header-text="Time Series Card [[tagName]]">
       <px-rangepicker
@@ -56,6 +46,15 @@
           hide-presets="true"
           >
       </px-rangepicker>
+      <px-dropdown display-value="Text">
+        <px-dropdown-content class="px-dropdown-content"
+          extend-dropdown="true"
+          extend-dropdown-by="25"
+          max-cont-character-width="10"
+          items='[[tags]]'
+          >
+        </px-dropdown-content>
+      </px-dropdown>
       <px-chart>
         <px-chart-series-bar
           parent-component='["<px-chart>","</px-chart>"]'
@@ -84,25 +83,13 @@
         value:{
             "start": 1473899027861,
             "end": 1483890003000,
-            "tags": [
-                {
-                    "name": [
-                        "CoalPower-xlp-04"
-                    ]
-                }
-            ]
+            "tags": []
         }
       },
       latestPointBody: {
         type:Object,
         value:{
-          "tags": [
-            {
-              "name": [
-                "CoalPower-xlp-04"
-              ]
-            }
-          ]
+          "tags": []
         }
       },
       tsData: {
@@ -111,6 +98,10 @@
       },
       tagName: {
         type: String
+      },
+      tags: {
+        type: Array,
+        observer: '_tags'
       }
     },
     ready: function ready(){
@@ -118,6 +109,21 @@
         this._dateRangeChanged();
         this.$.getTimeseries.generateRequest();
       });
+    },
+    _tags: function(){
+      if(this.tags.length > 0){
+        this._setBodies(this.tags[0]);
+      }
+    },
+    _setBodies: function(tag){
+      this.tagName = tag;
+      this.timeseriesBody.tags = [
+        {
+          "name": [ tag ]
+        }
+      ];
+      this.latestPointBody.tags = this.timeseriesBody.tags;
+      this.$.getTimeseries.generateRequest();
     },
     _updateData: function(){
       this.async(function() {
@@ -131,9 +137,13 @@
         x: latestPoint[0],
         y: latestPoint[1]
       }
-      this.tsData.push(latestPoint);
-      this.tsData.shift();
-      this.set('tsData', this.tsData);
+      if(latestPoint.x !== this.tsData[this.tsData.length-1].x){
+        if(this.tsData.length > 500){ //limit the chart to 500 points?
+          this.tsData.shift();
+        }
+        console.log("push new point");
+        this.push('tsData', latestPoint);
+      }
     },
     _parseTSData: function(e, details) {
       let data = details.response.tags[0].results[0].values;
@@ -147,23 +157,14 @@
         arr.push(point);
       });
       this.set('tsData', arr);
-      //this.$.getLatestPoint.generateRequest()
+      this.$.getLatestPoint.generateRequest()
     },
     _dateRangeChanged: function(){
       let start = +new Date(this.$.tsRangePicker.range.from);
       let end = +new Date(this.$.tsRangePicker.range.to);
 
-      this.timeseriesBody = {
-        "start": start,
-        "end": end,
-        "tags": [
-            {
-                "name": [
-                    "CoalPower-xlp-04"
-                ]
-            }
-        ]
-      };
+      this.timeseriesBody.start = start;
+      this.timeseriesBody.end = end;
     }
   });
 </script>
