@@ -25,16 +25,54 @@
           content-type="application/json"
           on-response="_tagResponse"
     ></iron-ajax>
+    <!-- <iron-ajax
+          id="tesqedqedt"
+          auto
+          method="GET"
+          url="/demand"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_demandResponse"
+    ></iron-ajax>
+    <iron-ajax
+          id="test"
+          auto
+          method="GET"
+          url="/predix-api/demand"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_demandResponse"
+    ></iron-ajax>
+    <iron-ajax
+          id="getDemand"
+          auto
+          method="GET"
+          url="/predix-api/external/demand"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_demandResponse"
+    ></iron-ajax>
+    <iron-ajax
+          id="getWindspeed"
+          auto
+          method="GET"
+          url="/predix-api/external/windspeed"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_demandResponse"
+    ></iron-ajax> -->
 
     <values-card tags="[[tags]]"></values-card>
     <!-- <scatter-plot-card></scatter-plot-card>-->
-    <time-series-card tags="[[tagVals]]"></time-series-card>
+    <time-series-card id="tsLineChart" tags="[[tagVals]]" hide-bar></time-series-card>
+    <time-series-card id="tsBarChart" tags="[[tagVals]]" hide-line></time-series-card>
 
   </template>
   <script>
 
     // This is the device name you are using
     var deviceName = 'trainer-03';
+    //var deviceName = '09'; //'trainer-09';
 
     Polymer({
 
@@ -73,6 +111,9 @@
           "tags": component.tags
         };
         this.tagVals = temp;
+      },
+      _demandResponse: function(){
+        console.log("demand!!");
       }
 
     });

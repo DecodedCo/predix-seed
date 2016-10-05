@@ -58,7 +58,7 @@
           </px-dropdown-content>
         </px-dropdown>
       </div>
-      <px-chart>
+      <px-chart hidden$="[[hideBar]]">
         <px-chart-series-bar
           parent-component='["<px-chart>","</px-chart>"]'
           id="temp"
@@ -67,7 +67,7 @@
           data="{{tsData}}">
         </px-chart-series-bar>
       </px-chart>
-      <px-vis-timeseries
+      <px-vis-timeseries hidden$="[[hideLine]]"
           height="300"
           include-all-series
           register-location="top"
@@ -105,6 +105,12 @@
       tags: {
         type: Array,
         observer: '_tags'
+      },
+      hideBar: {
+        type: Boolean
+      },
+      hideLine: {
+        type: Boolean
       }
     },
     ready: function ready(){
