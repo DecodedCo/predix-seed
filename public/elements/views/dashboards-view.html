@@ -25,15 +25,6 @@
           content-type="application/json"
           on-response="_tagResponse"
     ></iron-ajax>
-    <!-- <iron-ajax
-          id="tesqedqedt"
-          auto
-          method="GET"
-          url="/demand"
-          handle-as="json"
-          content-type="application/json"
-          on-response="_demandResponse"
-    ></iron-ajax>
     <iron-ajax
           id="test"
           auto
@@ -47,12 +38,12 @@
           id="getDemand"
           auto
           method="GET"
-          url="/predix-api/external/demand"
+          url="/predix-api/external"
           handle-as="json"
           content-type="application/json"
           on-response="_demandResponse"
     ></iron-ajax>
-    <iron-ajax
+  <!--   <iron-ajax
           id="getWindspeed"
           auto
           method="GET"
@@ -62,7 +53,21 @@
           on-response="_demandResponse"
     ></iron-ajax> -->
 
-    <values-card tags="[[tags]]"></values-card>
+    <values-card id="allTags" card-title="Real Time Dashboard" tags="[[tags]]"></values-card>
+
+    <!-- <div class="layout">
+      <values-card id="allTags" card-title="Button" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Coal Power" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Gas Power" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Humidity" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Light" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Rotary" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Temperature" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Wind Power" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Demand" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" card-title="Wind Speed" tags="[[tags]]" style="width:25%"></values-card>
+    </div> -->
+
     <!-- <scatter-plot-card></scatter-plot-card>-->
     <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar ></time-series-card>
     <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line></time-series-card>
@@ -90,6 +95,8 @@
 
       ready: function ready() {
         var _this = this;
+
+
 
       },
       _tagResponse: function(e, details){

@@ -22,7 +22,7 @@
           on-response="_onResponse"
     ></iron-ajax>
 
-    <px-card header-text="Real Time Dashboard">
+    <px-card header-text="[[cardTitle]]">
       <div class="layout">
         <template is="dom-repeat" items="{{tagsData}}" filter="round">
             <div class="layout__item">[[item.name]] <br>
@@ -64,6 +64,9 @@
       tagsData: {
         type: Array,
         value: []
+      },
+      cartTitle: {
+        type: String
       }
     },
     _tagsChanged: function ready(){

@@ -94,6 +94,18 @@ if (uaaIsConfigured) {
   	}),
   	proxy.router);
 
+  // app.use('/external', proxy('https://ge-wind.herokuapp.com/api', {
+  //   forwardPath: function(req) {
+  //     console.log("######## DO THINGS");
+  //     return require('url').parse(req.url).path;
+  //   }
+  // }));
+  // app.use('/external',
+  //   passport.authenticate('main', {
+  //     noredirect: true
+  //   }),
+  //   proxy.router);
+
   //callback route redirects to secure route after login
   app.get('/callback', passport.authenticate('predix', {
   	failureRedirect: '/'

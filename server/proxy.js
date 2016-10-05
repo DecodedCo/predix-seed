@@ -112,6 +112,9 @@ function getEndpointAndZone(key, credentials) {
 		out.serviceEndpoint = urlObj.protocol + '//' + urlObj.host;
 		out.zoneId = credentials.query['zone-http-header-value'];
 	}
+	if(key === 'external'){
+		out.serviceEndpoint = credentials.uri;
+	}
 	if (!out.serviceEndpoint) {
 		console.log('no proxy set for service: ' + key);
 	}
@@ -132,13 +135,24 @@ var setProxyRoute = function(key, credentials) {
 	router.use('/' + key, expressProxy(routeOptions.serviceEndpoint, {
 		https: true,
 		forwardPath: function (req) {
-			// console.log('proxy req.url: ' + req.url);
+			console.log('proxy req.url: ' + req.url);
 			return req.url;
 		},
 		intercept: cleanResponseHeaders,
 		decorateRequest: decorator
 	}));
 };
+
+router.use('/demand', expressProxy("https://ge-wind.herokuapp.com/api/demand", {
+	https: true,
+	forwardPath: function (req) {
+		console.log("######### PROXIED : " + JSON.stringify(req));
+		//return require('url').parse(req.url).path;
+		//return require('url').parse(req.baseUrl).path;
+		return req.url;
+	},
+	intercept: cleanResponseHeaders,
+}));
 
 // Fetches client token and stores in session.
 router.use('/', function(req,res,next){
@@ -180,7 +194,7 @@ var setProxyRoutes = function() {
 	});
 };
 setProxyRoutes();
-
+console.log("Router: " + router);
 module.exports = {
 	router: router,
 	setServiceConfig: setServiceConfig,

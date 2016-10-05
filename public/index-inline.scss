@@ -46,3 +46,13 @@ body.loading #splash {
   z-index: 1;
   background: #3b3b3f;
 }
+
+.layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.layout__item {
+  flex-basis: 20%;
+}
