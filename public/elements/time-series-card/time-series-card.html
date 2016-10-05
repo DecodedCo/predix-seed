@@ -33,7 +33,7 @@
           on-response="_onResponse"
     ></iron-ajax>
 
-    <px-card header-text="Time Series Card">
+    <px-card header-text="[[cardTitle]]">
       <div style="margin-bottom:1em;">
         <px-rangepicker
             style="width: 60%;display:inline-block;"
@@ -111,6 +111,9 @@
       },
       hideLine: {
         type: Boolean
+      },
+      cardTitle: {
+        type: String
       }
     },
     ready: function ready(){
