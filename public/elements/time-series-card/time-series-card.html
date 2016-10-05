@@ -39,7 +39,6 @@
             style="width: 60%;display:inline-block;"
             id="tsRangePicker"
             block-future-dates="true"
-            range='{"from":"2016-01-01T01:00:00.000Z","to":"2016-07-01T11:00:00.000Z"}'
             date-format="YYYY/MM/DD"
             time-format="hh:mm:ss A"
             show-buttons="true"
@@ -85,8 +84,8 @@
       timeseriesBody: {
         type:Object,
         value:{
-            "start": 1473899027861,
-            "end": 1483890003000,
+            "start": "12h-ago",
+            "end": "1mi-ago",
             "tags": []
         }
       },
@@ -109,14 +108,17 @@
       }
     },
     ready: function ready(){
+      let date = new Date();
+      this.$.tsRangePicker.range = {
+        "from": new Date(date.getTime() - 43200000).toISOString(), //"2016-01-01T01:00:00.000Z",
+        "to": new Date(date.getTime()).toISOString()
+      };
       this.$.tsRangePicker.addEventListener('px-datetime-range-submitted', () => {
         this._dateRangeChanged();
         this.$.getTimeseries.generateRequest();
       });
-
       this.$.dropdown.addEventListener('dropdown_content_value_changed', (e) => {
         this._tagChange(e.detail.textValue);
-
       });
     },
     _tags: function(){
