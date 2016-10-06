@@ -10,6 +10,7 @@
 <link rel="import" href="/elements/scatter-plot-card/scatter-plot-card.html">
 <link rel="import" href="/elements/time-series-card/time-series-card.html">
 <link rel="import" href="/elements/values-card/values-card.html">
+<link rel="import" href="/elements/latest-tag-data/latest-tag-data.html">
 
 <dom-module id="dashboards-view">
   <template>
@@ -55,18 +56,28 @@
 
     <values-card id="allTags" card-title="Real Time Dashboard" tags="[[tags]]"></values-card>
 
-    <!-- <div class="layout">
-      <values-card id="allTags" card-title="Button" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Coal Power" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Gas Power" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Humidity" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Light" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Rotary" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Temperature" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Wind Power" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Demand" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" card-title="Wind Speed" tags="[[tags]]" style="width:25%"></values-card>
-    </div> -->
+    <span class="layout">
+      <latest-data-card id="buttonTag" class="layout__item"
+          card-title="Button" tag="Button-xlp-[[deviceName]]"></latest-data-card>
+      <latest-data-card id="coalTags" class="layout__item"
+        card-title="Coal Power" tag="CoalPower-xlp-[[deviceName]]"></latest-data-card>
+      <!-- <values-card id="allTags" class="layout__item"
+        card-title="Gas Power" tags="[[tags]]"></values-card>
+      <values-card id="allTags" class="layout__item"
+        card-title="Humidity" tags="[[tags]]"></values-card>
+      <values-card id="allTags" class="layout__item"
+        card-title="Light" tags="[[tags]]"></values-card>
+      <values-card id="allTags" class="layout__item"
+        card-title="Rotary" tags="[[tags]]"></values-card> -->
+      <!-- <values-card id="allTags" class="layout__item"
+        card-title="Temperature" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" class="layout__item"
+        card-title="Wind Power" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" class="layout__item"
+        card-title="Demand" tags="[[tags]]" style="width:25%"></values-card>
+      <values-card id="allTags" class="layout__item"
+        card-title="Wind Speed" tags="[[tags]]" style="width:25%"></values-card> -->
+    </span>
 
     <!-- <scatter-plot-card></scatter-plot-card>-->
     <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar ></time-series-card>
@@ -76,8 +87,8 @@
   <script>
 
     // This is the device name you are using
-    var deviceName = 'trainer-03';
-    //var deviceName = '09'; //'trainer-09';
+    //var deviceName = 'trainer-03';
+    var deviceName = '09'; //'trainer-09';
 
     Polymer({
 
@@ -90,6 +101,10 @@
         },
         tagVals: {
           type: Array
+        },
+        deviceName: {
+          type: String,
+          value: '09'
         }
       },
 
@@ -107,7 +122,7 @@
         };
 
         tags.forEach((tag) => {
-          if(tag.indexOf(deviceName)!== -1){
+          if(tag.indexOf(this.deviceName)!== -1){
             temp.push(tag);
             component.tags.push({
               name: [ tag ]
@@ -122,7 +137,14 @@
       _demandResponse: function(){
         console.log("demand!!");
       }
-
+      // ,
+      // _getTag: function(str){
+      //   if(this.tagVals){
+      //     return this.tagVals.find((tag) => {
+      //         return tag === str;
+      //       });
+      //   }
+      // }
     });
   </script>
 </dom-module>
