@@ -21,33 +21,23 @@
           on-response="_tagResponse"
     ></iron-ajax>
     <iron-ajax
-          id="test"
+          id="getWindspeed"
           auto
           method="GET"
-          url="/predix-api/demand"
+          url="/external/api/windspeed"
           handle-as="json"
           content-type="application/json"
-          on-response="_demandResponse"
+          on-response="_windSpeedResponse"
     ></iron-ajax>
     <iron-ajax
           id="getDemand"
           auto
           method="GET"
-          url="/predix-api/external"
+          url="/external/api/demand"
           handle-as="json"
           content-type="application/json"
           on-response="_demandResponse"
     ></iron-ajax>
-  <!--   <iron-ajax
-          id="getWindspeed"
-          auto
-          method="GET"
-          url="/predix-api/external/windspeed"
-          handle-as="json"
-          content-type="application/json"
-          on-response="_demandResponse"
-    ></iron-ajax> -->
-
     <!-- Show all of the tag latest values on one card -->
     <!-- <values-card id="allTags" card-title="Real Time Dashboard" tags="[[tags]]"></values-card> -->
 
@@ -95,9 +85,6 @@
 
       ready: function ready() {
         var _this = this;
-
-
-
       },
       _tagResponse: function(e, details){
         let tags = details.response.results;
@@ -119,17 +106,12 @@
         };
         this.tagVals = temp;
       },
-      _demandResponse: function(){
-        console.log("demand!!");
+      _demandResponse: function(data){
+        console.log("demand!!", data);
+      },
+      _windSpeedResponse: function(){
+        console.log("WindSpeed!!");
       }
-      // ,
-      // _getTag: function(str){
-      //   if(this.tagVals){
-      //     return this.tagVals.find((tag) => {
-      //         return tag === str;
-      //       });
-      //   }
-      // }
     });
   </script>
 </dom-module>
