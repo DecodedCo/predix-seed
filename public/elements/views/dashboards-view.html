@@ -29,15 +29,6 @@
           content-type="application/json"
           on-response="_windSpeedResponse"
     ></iron-ajax>
-    <iron-ajax
-          id="getDemand"
-          auto
-          method="GET"
-          url="/external/api/demand"
-          handle-as="json"
-          content-type="application/json"
-          on-response="_demandResponse"
-    ></iron-ajax>
 
     <!-- Show latest value on one card per tag -->
     <span class="layout">
@@ -51,13 +42,12 @@
       <latest-data-card id="humidityTag" class="layout__item"
         card-title="Humidity" tag="Humidity-xlp-[[deviceName]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand" tag="Demand-test"></latest-data-card>
+        card-title="Demand" tag="Demand"></latest-data-card>
     </span>
 
     <!-- <scatter-plot-card></scatter-plot-card>-->
-
     <!-- Show time series data as a line chart -->
-    <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-ba></time-series-card>
+    <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar></time-series-card>
     <!-- Show time series data as a bar chart -->
     <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line></time-series-card>
 
@@ -107,9 +97,6 @@
           "tags": component.tags
         };
         this.tagVals = temp;
-      },
-      _demandResponse: function(){
-        console.log("demand!!");
       },
       _windSpeedResponse: function(){
         console.log("WindSpeed!!");
