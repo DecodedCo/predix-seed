@@ -38,18 +38,18 @@
           content-type="application/json"
           on-response="_demandResponse"
     ></iron-ajax>
-    <!-- Show all of the tag latest values on one card -->
-    <!-- <values-card id="allTags" card-title="Real Time Dashboard" tags="[[tags]]"></values-card> -->
 
     <!-- Show latest value on one card per tag -->
     <span class="layout">
       <latest-data-card id="coalTag" class="layout__item"
         card-title="Coal Power" tag="CoalPower-xlp-[[deviceName]]"></latest-data-card>
+      <!-- How can we set the windSpeed variable? -->
+      <latest-data-card id="windSpeed" class="layout__item"
+        card-title="Wind Speed" tag="[[windSpeed]]"></latest-data-card>
       <latest-data-card id="gasTag" class="layout__item"
         card-title="Gas Power" tag="GasPower-xlp-[[deviceName]]"></latest-data-card>
       <latest-data-card id="humidityTag" class="layout__item"
         card-title="Humidity" tag="Humidity-xlp-[[deviceName]]"></latest-data-card>
-        <!-- Add more data cards here! -->
     </span>
 
     <!-- <scatter-plot-card></scatter-plot-card>-->
