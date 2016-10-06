@@ -20,10 +20,11 @@
 
     <px-card header-text="[[cardTitle]]">
       <div class="layout">
-        [[tag]]
-        <div class="layout__item">[[data.name]] <br>
-          <h2 style="display:inline-block" hidden$="[[empty]]"> [[latestTSPoint]]</h2>
-          <h2 style="display:inline-block" hidden$="[[!empty]]"> N/A</h2>
+        <div class="layout__item">[[tag]] <br>
+          <h2 hidden$="[[empty]]"> [[latestTSPoint]]</h2>
+          <h2 hidden$="[[!empty]]"> N/A</h2>
+          <div hidden$="[[empty]]">*As of [[time]]</div>
+          <div hidden$="[[!empty]]">Data not available</div>
         </div>
       </div>
     </px-card>
@@ -53,6 +54,9 @@
       empty: {
         type: Boolean,
         value: true
+      },
+      time: {
+        type: String
       }
     },
     _tagChanged: function ready(){
@@ -78,6 +82,7 @@
       if(this.data[0].results[0].values.length > 0){
         this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
         this.empty = !this._hasValue();
+        this.time = this._formatTime().slice(4,24);
       }
     },
     _hasValue: function(){
@@ -85,6 +90,11 @@
         return true;
       }
       return false;
+    },
+    _formatTime: function(){
+      if(this.data){
+        return new Date(this.data[0].results[0].values[0][0]).toString();
+      }
     }
   });
 </script>
