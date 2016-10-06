@@ -92,8 +92,9 @@
         };
 
         tags.forEach((tag) => {
-          if(tag.indexOf(this.deviceName)!== -1){
+          if(tag.indexOf(this.deviceName)!== -1 || tag == "Demand"){
             temp.push(tag);
+            console.log(tag);
             component.tags.push({
               name: [ tag ]
             });
