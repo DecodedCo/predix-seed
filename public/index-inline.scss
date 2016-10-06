@@ -51,10 +51,12 @@ body.loading #splash {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-content: justify-content;
 }
 
 .layout__item {
-  margin-right: .5em;
+  margin-right: .25em;
+  flex-grow: 1;
 }
 
 .layout__item:last-child {
