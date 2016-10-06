@@ -54,41 +54,35 @@
           on-response="_demandResponse"
     ></iron-ajax> -->
 
-    <values-card id="allTags" card-title="Real Time Dashboard" tags="[[tags]]"></values-card>
+    <!-- Show all of the tag latest values on one card -->
+    <!-- <values-card id="allTags" card-title="Real Time Dashboard" tags="[[tags]]"></values-card> -->
 
+    <!-- Show latest value on one card per tag -->
     <span class="layout">
       <latest-data-card id="buttonTag" class="layout__item"
           card-title="Button" tag="Button-xlp-[[deviceName]]"></latest-data-card>
-      <latest-data-card id="coalTags" class="layout__item"
+      <latest-data-card id="coalTag" class="layout__item"
         card-title="Coal Power" tag="CoalPower-xlp-[[deviceName]]"></latest-data-card>
-      <!-- <values-card id="allTags" class="layout__item"
-        card-title="Gas Power" tags="[[tags]]"></values-card>
-      <values-card id="allTags" class="layout__item"
-        card-title="Humidity" tags="[[tags]]"></values-card>
-      <values-card id="allTags" class="layout__item"
-        card-title="Light" tags="[[tags]]"></values-card>
-      <values-card id="allTags" class="layout__item"
-        card-title="Rotary" tags="[[tags]]"></values-card> -->
-      <!-- <values-card id="allTags" class="layout__item"
-        card-title="Temperature" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" class="layout__item"
-        card-title="Wind Power" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" class="layout__item"
-        card-title="Demand" tags="[[tags]]" style="width:25%"></values-card>
-      <values-card id="allTags" class="layout__item"
-        card-title="Wind Speed" tags="[[tags]]" style="width:25%"></values-card> -->
+      <latest-data-card id="gasTag" class="layout__item"
+        card-title="Gas Power" tag="GasPower-xlp-[[deviceName]]"></latest-data-card>
+      <latest-data-card id="humidityTag" class="layout__item"
+        card-title="Humidity" tag="Humidity-xlp-[[deviceName]]"></latest-data-card>
+        <!-- Add more data cards here! -->
     </span>
 
     <!-- <scatter-plot-card></scatter-plot-card>-->
+
+    <!-- Show time series data as a line chart -->
     <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar ></time-series-card>
+    <!-- Show time series data as a bar chart -->
     <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line></time-series-card>
 
   </template>
   <script>
 
     // This is the device name you are using
-    //var deviceName = 'trainer-03';
-    var deviceName = '09'; //'trainer-09';
+    var deviceName = 'trainer-03';
+    //var deviceName = '09'; //'trainer-09';
 
     Polymer({
 
