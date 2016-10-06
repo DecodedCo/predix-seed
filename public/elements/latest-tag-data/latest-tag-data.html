@@ -22,7 +22,8 @@
       <div class="layout">
         [[tag]]
         <div class="layout__item">[[data.name]] <br>
-          <h2 style="display:inline-block"> [[latestTSPoint]]</h2>
+          <h2 style="display:inline-block" hidden$="[[empty]]"> [[latestTSPoint]]</h2>
+          <h2 style="display:inline-block" hidden$="[[!empty]]"> N/A</h2>
         </div>
       </div>
     </px-card>
@@ -48,6 +49,10 @@
       },
       cartTitle: {
         type: String
+      },
+      empty: {
+        type: Boolean,
+        value: true
       }
     },
     _tagChanged: function ready(){
@@ -72,7 +77,14 @@
       this.data = details.response.tags;
       if(this.data[0].results[0].values.length > 0){
         this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
+        this.empty = !this._hasValue();
       }
+    },
+    _hasValue: function(){
+      if(this.latestTSPoint){
+        return true;
+      }
+      return false;
     }
   });
 </script>
