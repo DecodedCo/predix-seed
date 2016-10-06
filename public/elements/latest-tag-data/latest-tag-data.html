@@ -1,0 +1,78 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/px-card/px-card.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+
+<!-- <script type="text/javascript" src="/bower_components/px/dist/px.min.js"></script> -->
+
+<dom-module id="latest-data-card">
+  <template>
+
+    <!-- apply imported style module -->
+    <iron-ajax
+          id="stuff"
+          method="POST"
+          url="/predix-api/predix-timeseries/v1/datapoints/latest"
+          handle-as="json"
+          body="[[latestPointBody]]"
+          content-type="application/json"
+          on-response="_onResponse"
+    ></iron-ajax>
+
+    <px-card header-text="[[cardTitle]]">
+      <div class="layout">
+        [[tag]]
+        <div class="layout__item">[[data.name]] <br>
+          <h2 style="display:inline-block"> [[latestTSPoint]]</h2>
+        </div>
+      </div>
+    </px-card>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'latest-data-card',
+    properties: {
+      latestPointBody: {
+        type:Object,
+      },
+      latestTSPoint: {
+        type: Number
+      },
+      tag: {
+        type: String,
+        observer: '_tagChanged'
+      },
+      data: {
+        type: Array,
+        value: []
+      },
+      cartTitle: {
+        type: String
+      }
+    },
+    _tagChanged: function ready(){
+      if(this.tag){
+        this.latestPointBody = {
+          "tags": [
+            {
+              "name": [ this.tag ]
+            }
+          ]
+        };
+        this.$.stuff.generateRequest();
+      }
+    },
+    _updateData: function(){
+      this.async(function() {
+        this.$.stuff.generateRequest();
+      }, 3000);
+    },
+    _onResponse: function(e, details) {
+      this._updateData();
+      this.data = details.response.tags;
+      if(this.data[0].results[0].values.length > 0){
+        this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
+      }
+    }
+  });
+</script>
