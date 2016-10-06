@@ -54,5 +54,9 @@ body.loading #splash {
 }
 
 .layout__item {
-  flex-basis: 20%;
+  margin-right: .5em;
+}
+
+.layout__item:last-child {
+  margin-right: auto;
 }
