@@ -1,11 +1,5 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-
-<!--
-<link rel="import" href="/bower_components/px-deck-selector/px-deck-selector.html">
- --><link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
-
-<!-- local px-deck -->
-<!-- <link rel="import" href="/elements/px-deck/px-deck-index.html"> -->
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="/elements/bar-chart-card/bar-chart-card.html">
 <link rel="import" href="/elements/scatter-plot-card/scatter-plot-card.html">
 <link rel="import" href="/elements/time-series-card/time-series-card.html">
@@ -59,8 +53,6 @@
 
     <!-- Show latest value on one card per tag -->
     <span class="layout">
-      <latest-data-card id="buttonTag" class="layout__item"
-          card-title="Button" tag="Button-xlp-[[deviceName]]"></latest-data-card>
       <latest-data-card id="coalTag" class="layout__item"
         card-title="Coal Power" tag="CoalPower-xlp-[[deviceName]]"></latest-data-card>
       <latest-data-card id="gasTag" class="layout__item"
@@ -73,7 +65,7 @@
     <!-- <scatter-plot-card></scatter-plot-card>-->
 
     <!-- Show time series data as a line chart -->
-    <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar ></time-series-card>
+    <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-ba></time-series-card>
     <!-- Show time series data as a bar chart -->
     <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line></time-series-card>
 
@@ -82,7 +74,6 @@
 
     // This is the device name you are using
     var deviceName = 'trainer-03';
-    //var deviceName = '09'; //'trainer-09';
 
     Polymer({
 
@@ -98,7 +89,7 @@
         },
         deviceName: {
           type: String,
-          value: '09'
+          value: deviceName
         }
       },
 

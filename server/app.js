@@ -14,6 +14,7 @@ var passport;  // only used if you have configured properties for UAA
 // simple in-memory session is used here. use connect-redis for production!!
 var session = require('express-session');
 var proxy = require('./proxy'); // used when requesting data from real services.
+var herokuProxy = require('express-http-proxy'); // used for Heroku
 // get config settings from local file or VCAPS env var in the cloud
 var config = require('./predix-config');
 // configure passport for authentication with UAA
@@ -66,19 +67,6 @@ var server = app.listen(process.env.VCAP_APP_PORT || 5000, function () {
 	console.log ('Server started on port: ' + server.address().port);
 });
 
-/*******************************************************
-SET UP MOCK API ROUTES
-*******************************************************/
-// Import route modules
-var timeSeriesRoutes = require('./time-series-routes.js')();
-
-// add mock API routes.  (Remove these before deploying to production.)
-app.use('/api/time-series', jsonServer.router(timeSeriesRoutes));
-
-/****************************************************************************
-	SET UP EXPRESS ROUTES
-*****************************************************************************/
-
 if (uaaIsConfigured) {
   //login route redirect to predix uaa login page
   app.get('/login',passport.authenticate('predix', {'scope': ''}), function(req, res) {
@@ -94,17 +82,8 @@ if (uaaIsConfigured) {
   	}),
   	proxy.router);
 
-  // app.use('/external', proxy('https://ge-wind.herokuapp.com/api', {
-  //   forwardPath: function(req) {
-  //     console.log("######## DO THINGS");
-  //     return require('url').parse(req.url).path;
-  //   }
-  // }));
-  // app.use('/external',
-  //   passport.authenticate('main', {
-  //     noredirect: true
-  //   }),
-  //   proxy.router);
+  // access realtime APIs from Heroku instance
+  app.use('/external', herokuProxy(config.externalURL));
 
   //callback route redirects to secure route after login
   app.get('/callback', passport.authenticate('predix', {

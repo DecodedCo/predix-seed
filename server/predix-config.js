@@ -46,7 +46,7 @@ if(node_env === 'development') {
 		settings.timeseriesURL = timeseriesService[0].credentials.query.uri;
 	}
 
-	settings.externalURL = "https://ge-wind.herokuapp.com/api/";
+	settings.externalURL = "https://ge-wind.herokuapp.com/";
 	// read VCAP_APPLICATION
 	var vcapsApplication = JSON.parse(process.env.VCAP_APPLICATION);
 	settings.callbackURL = 'https://' + vcapsApplication.uris[0] + '/callback';
