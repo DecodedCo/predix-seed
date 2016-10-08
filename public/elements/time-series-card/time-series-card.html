@@ -46,12 +46,15 @@
             >
         </px-rangepicker>
         <px-dropdown id="dropdown"
-          display-value="[[tags.0]]" style="width: 20%;display:inline-block;float:right;">
+          display-value="[[tags.0]]" style="width: 20%;display:inline-block;float:right;"
+          hide-chevron="[[hideChevron]]"
+          >
           <px-dropdown-content class="px-dropdown-content"
             extend-dropdown="true"
             extend-dropdown-by="25"
             max-cont-character-width="10"
             items='[[tags]]'
+            hidden$="[[hideChevron]]"
             >
           </px-dropdown-content>
         </px-dropdown>
@@ -112,6 +115,10 @@
       },
       cardTitle: {
         type: String
+      },
+      hideChevron: {
+        type: Boolean,
+        value: true
       }
     },
     ready: function ready(){
@@ -130,6 +137,9 @@
     },
     _tags: function(){
       if(this.tags.length > 0){
+        if(this.tags.length > 1){
+          this.hideChevron = false;
+        }
         this._tagChange(this.tags[0]);
       }
     },
