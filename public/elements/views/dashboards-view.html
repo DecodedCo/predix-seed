@@ -56,6 +56,8 @@
     <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar></time-series-card>
     <!-- Show time series data as a bar chart -->
     <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line></time-series-card>
+    <!-- Show time series for just one tag, no dropdown -->
+    <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-trainer-03')]]" hide-line></time-series-card>
 
   </template>
   <script>
@@ -107,6 +109,11 @@
       },
       _windSpeedResponse: function(){
         console.log("WindSpeed!!");
+      },
+      _setTag: function(tag){
+        let temp = [];
+        temp.push(tag);
+        return temp;
       }
     });
   </script>
