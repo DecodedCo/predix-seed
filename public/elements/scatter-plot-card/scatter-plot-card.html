@@ -7,18 +7,34 @@
 
   <template>
     <iron-ajax
+          id="getData"
+          method="POST"
+          url="/predix-api/predix-timeseries/v1/datapoints"
+          body="{{timeseriesBody}}"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_demandResponse"
+          auto
+    ></iron-ajax>
+    <!-- <iron-ajax
       url="/api/time-series/scatter/1"
       handle-as="json"
       last-response="{{data}}" auto>
-    </iron-ajax>
-    <px-card header-text="Scatter Plot">
+    </iron-ajax>       id-key = "[[idKey]]",       series-config="{{seriesConfig}}"-->
+    <px-vis-data-converter
+      data-key = "data"
+      original-data="[[data]]"
+      chart-data="{{chartData}}">
+    </px-vis-data-converter>
+    Data: {{chartData}}
+    <px-card header-text="[[cardTitle]]">
       <px-vis-xy-chart
         id="chart"
-        chart-data="{{data.data}}"
+        chart-data="[[chartData]]"
         width="500"
         height="300"
         margin='{ "top": "30", "bottom": "40", "left": "60", "right": "30" }'
-        x-axis-config='{"title": "X",
+        x-axis-config='{"title": "Time (ms)",
          "labelPosition": "center",
          "orientation": "bottom"}'
         y-axis-config='{"title": "Y",
@@ -30,45 +46,28 @@
         series-config='{
             "firstSeries": {
               "type": "scatter",
-              "name": "Data",
-              "xAxisUnit": "Hz",
-              "yAxisUnit": "Hz",
-              "x": "T48A",
-              "y":"T48B"
+              "name": "Test",
+              "xAxisUnit": "MS",
+              "yAxisUnit": "MW",
+              "x": "Date",
+              "y":"Demand"
             },"secondSeries": {
               "type": "line",
-              "name": "Trend",
-              "x": "T48A",
+              "name": "Total Output",
+              "xAxisUnit": "MS",
+              "yAxisUnit": "MW",
+              "x": "Date",
               "y":"Line"
             }
           }'
         default-series-config='{
-          "x": "T48A",
+          "x": "Date",
           "xMin": "dynamic",
           "xMax": "dynamic",
           "yMin": "dynamic",
           "yMax": "dynamic"
         }'
-        event-config='{
-          "Fa Icon": {
-            "color": "blue",
-            "icon": "fa-camera",
-            "type": "fa",
-            "offset": [0, 0]
-          },
-          "Unicode": {
-            "color": "green",
-            "icon": "\uf015",
-            "type": "unicode",
-            "offset": [1, 0]
-          },
-          "Event Png": {
-            "icon": "/elements/scatter-plot-card/ge_logo.png",
-            "type": "image",
-            "offset": [0, -20],
-            "size": "20"
-          }
-        }'
+        time-data="Date"
         >
       </px-vis-xy-chart>
     </px-card>
@@ -78,7 +77,66 @@
     Polymer({
       is: 'scatter-plot-card',
       properties: {
+        cardTitle: {
+          type: String
+        },
+        outputTag: {
+          type: String
+        },
+        demandTag: {
+          type: String
+        },
+        timeseriesBody: {
+          type:Object,
+          value:{
+              // "start": "12h-ago",
+              // "end": "1mi-ago",
+              "start": "2d-ago",
+              "end": "1d-ago",
+              "tags": [{
+                "name": [ 'Demand' ]
+              },
+              {
+                "name": [ 'TotalPower-xlp-trainer-03' ]
+              }]
+          }
+        },
+        data: {
+          type: Array,
+          value: []
+        }
+      },
+      _demandResponse: function(e, data){
+        let tagName = data.response.tags[0].name;
+        let demandData = data.response.tags[0].results[0].values;
+        let outputData = data.response.tags[1].results[0].values;
+        let tempDemand = [];
+        let tempOutput = [];
+        demandData.forEach((point) => {
+          tempDemand.push([
+            point[0],
+            point[1]
+          ]);
+        });
+        outputData.forEach((point) => {
+          tempOutput.push([
+            point[0],
+            point[1]
+          ])
+        })
+        outputData = {
+          id: this.outputTag,
+          name: "Total Output",
+          data: tempOutput
+        };
+        demandData = {
+          id: this.demandTag,
+          name: "Demand",
+          data: tempDemand
+        };
 
+        this.data.push(outputData);
+        this.data.push(demandData);
       }
     });
 
