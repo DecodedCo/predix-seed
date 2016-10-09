@@ -22,11 +22,12 @@
       last-response="{{data}}" auto>
     </iron-ajax>       id-key = "[[idKey]]",       series-config="{{seriesConfig}}"-->
     <px-vis-data-converter
-      data-key = "data"
-      original-data="[[data]]"
+      data-key="data"
+      original-data="[[someData]]"
+      id-key="id"
+      name-key="name"
       chart-data="{{chartData}}">
     </px-vis-data-converter>
-    Data: {{chartData}}
     <px-card header-text="[[cardTitle]]">
       <px-vis-xy-chart
         id="chart"
@@ -37,29 +38,13 @@
         x-axis-config='{"title": "Time (ms)",
          "labelPosition": "center",
          "orientation": "bottom"}'
-        y-axis-config='{"title": "Y",
+        y-axis-config='{"title": "Power (MW)",
           "labelPosition": "center",
           "orientation": "left"}'
         register-config='{
           "height": 50,
           "type": "horizontal"}'
-        series-config='{
-            "firstSeries": {
-              "type": "scatter",
-              "name": "Test",
-              "xAxisUnit": "MS",
-              "yAxisUnit": "MW",
-              "x": "Date",
-              "y":"Demand"
-            },"secondSeries": {
-              "type": "line",
-              "name": "Total Output",
-              "xAxisUnit": "MS",
-              "yAxisUnit": "MW",
-              "x": "Date",
-              "y":"Line"
-            }
-          }'
+        series-config="{{seriesConfig}}"
         default-series-config='{
           "x": "Date",
           "xMin": "dynamic",
@@ -89,8 +74,6 @@
         timeseriesBody: {
           type:Object,
           value:{
-              // "start": "12h-ago",
-              // "end": "1mi-ago",
               "start": "2d-ago",
               "end": "1d-ago",
               "tags": [{
@@ -101,9 +84,16 @@
               }]
           }
         },
-        data: {
+        someData: {
           type: Array,
           value: []
+        },
+        chartData: {
+          type: Array,
+          value: []
+        },
+        seriesConfig: {
+          type: Object
         }
       },
       _demandResponse: function(e, data){
@@ -126,7 +116,7 @@
         })
         outputData = {
           id: this.outputTag,
-          name: "Total Output",
+          name: "Output",
           data: tempOutput
         };
         demandData = {
@@ -134,12 +124,27 @@
           name: "Demand",
           data: tempDemand
         };
-
-        this.data.push(outputData);
-        this.data.push(demandData);
+        this.set('seriesConfig', {
+            "firstSeries": {
+              "type": "scatter",
+              "name": "Demand",
+              "xAxisUnit": "ms",
+              "yAxisUnit": "MW",
+              "x": "x",
+              "y": this.demandTag
+            },"secondSeries": {
+              "type": "scatter",
+              "name": "Output",
+              "xAxisUnit": "ms",
+              "yAxisUnit": "MW",
+              "x": "x",
+              "y": this.outputTag
+            }
+          });
+        this.push('someData', outputData);
+        this.push('someData', demandData);
       }
     });
-
   </script>
 
 </dom-module>

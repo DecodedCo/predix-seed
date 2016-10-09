@@ -51,13 +51,14 @@
         card-title="Demand (MW)" tag="Demand"></latest-data-card>
     </span>
 
-    <!-- <scatter-plot-card></scatter-plot-card>-->
+    <!-- show scatter plot of demand vs. output-->
+    <scatter-plot-card card-title="Scatter Plot Card" output-tag="TotalPower-xlp-[[deviceName]]" demand-tag="Demand"></scatter-plot-card>
     <!-- Show time series data as a line chart -->
     <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar></time-series-card>
     <!-- Show time series data as a bar chart -->
     <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line></time-series-card>
     <!-- Show time series for just one tag, no dropdown -->
-    <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-trainer-03')]]" hide-line></time-series-card>
+    <time-series-card id="tsSingleTag" card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-trainer-03')]]" hide-line></time-series-card>
 
   </template>
   <script>
@@ -96,7 +97,6 @@
         tags.forEach((tag) => {
           if(tag.indexOf(this.deviceName)!== -1 || tag == "Demand"){
             temp.push(tag);
-            console.log(tag);
             component.tags.push({
               name: [ tag ]
             });
