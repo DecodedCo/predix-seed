@@ -17,13 +17,21 @@
           content-type="application/json"
           on-response="_onResponse"
     ></iron-ajax>
+    <iron-ajax
+          id="getWindspeed"
+          method="GET"
+          url="/external/api/windspeed"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_windSpeedResponse"
+    ></iron-ajax>
 
     <px-card header-text="[[cardTitle]]">
       <div class="layout">
         <div class="layout__item">[[tag]] <br>
           <h2 hidden$="[[empty]]"> [[latestTSPoint]]</h2>
           <h2 hidden$="[[!empty]]"> N/A</h2>
-          <div hidden$="[[empty]]">*As of [[time]]</div>
+          <div hidden$="[[empty]]">* [[time]]</div>
           <div hidden$="[[!empty]]">Data not available</div>
         </div>
       </div>
@@ -57,18 +65,27 @@
       },
       time: {
         type: String
+      },
+      windspeed: {
+        type: Boolean,
+        value: false
       }
     },
     _tagChanged: function ready(){
       if(this.tag){
-        this.latestPointBody = {
-          "tags": [
-            {
-              "name": [ this.tag ]
-            }
-          ]
-        };
-        this.$.stuff.generateRequest();
+        if(!this.windspeed){
+          this.latestPointBody = {
+            "tags": [
+              {
+                "name": [ this.tag ]
+              }
+            ]
+          };
+          this.$.stuff.generateRequest();
+        }
+        else if(this.windspeed){
+          this.$.getWindspeed.generateRequest();
+        }
       }
     },
     _updateData: function(){
@@ -82,7 +99,7 @@
       if(this.data[0].results[0].values.length > 0){
         this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
         this.empty = !this._hasValue();
-        this.time = this._formatTime().slice(4,24);
+        this.time = "As of " + this._formatTime().slice(4,24);
       }
     },
     _hasValue: function(){
@@ -95,6 +112,12 @@
       if(this.data){
         return new Date(this.data[0].results[0].values[0][0]).toString();
       }
-    }
+    },
+    _windSpeedResponse: function(e, details){
+      console.log("WindSpeed!!");
+      this.latestTSPoint = details.response.windspeed;
+      this.empty = !this._hasValue();
+      this.time = "Time not available"
+    },
   });
 </script>

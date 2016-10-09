@@ -20,15 +20,6 @@
           content-type="application/json"
           on-response="_tagResponse"
     ></iron-ajax>
-    <iron-ajax
-          id="getWindspeed"
-          auto
-          method="GET"
-          url="/external/api/windspeed"
-          handle-as="json"
-          content-type="application/json"
-          on-response="_windSpeedResponse"
-    ></iron-ajax>
 
     <!-- Show latest value on one card per tag -->
     <span class="layout">
@@ -46,7 +37,7 @@
         card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]"></latest-data-card>
       <!-- How can we set the windSpeed variable? -->
       <latest-data-card id="windSpeed" class="layout__item"
-        card-title="Wind Speed (m/s)" tag="[[windSpeed]]"></latest-data-card>
+        card-title="Wind Speed (m/s)" tag="WindSpeed" windspeed></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
         card-title="Demand (MW)" tag="Demand"></latest-data-card>
     </span>
@@ -106,9 +97,6 @@
           "tags": component.tags
         };
         this.tagVals = temp;
-      },
-      _windSpeedResponse: function(){
-        console.log("WindSpeed!!");
       },
       _setTag: function(tag){
         let temp = [];
