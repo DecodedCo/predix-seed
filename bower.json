@@ -53,7 +53,8 @@
     "px-input-group-design": "^0.2.12",
     "px-vis": "^0.3.9",
     "px-rangepicker": "^1.2.1",
-    "px-dropdown": "^0.12.2"
+    "px-dropdown": "^0.12.2",
+    "px-alert-message": "^0.7.0"
   },
   "resolutions": {
     "polymer": "^1.5.0",

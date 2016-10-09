@@ -5,6 +5,16 @@
 <link rel="import" href="/elements/time-series-card/time-series-card.html">
 <link rel="import" href="/elements/values-card/values-card.html">
 <link rel="import" href="/elements/latest-tag-data/latest-tag-data.html">
+<link rel="import" href="/bower_components/px-alert-message/px-alert-message.html">
+<style media="screen">
+  .alert-message-container {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1020;
+    height: 100vh;
+  }
+</style>
 
 <dom-module id="dashboards-view">
   <template>
@@ -20,6 +30,15 @@
           content-type="application/json"
           on-response="_tagResponse"
     ></iron-ajax>
+    <div class="alert-message-container">
+      <px-alert-message hidden
+        type="important"
+        message-title="Important!"
+        message="Demand is greater than total power output."
+        action="dismiss"
+        auto-dismiss="5000">
+      </px-alert-message>
+    </div>
 
     <!-- Show latest value on one card per tag -->
     <span class="layout">
