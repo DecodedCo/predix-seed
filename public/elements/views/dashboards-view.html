@@ -58,7 +58,7 @@
       <latest-data-card id="windSpeed" class="layout__item"
         card-title="Wind Speed (m/s)" tag="WindSpeed" windspeed card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" demand={{demand}}></latest-data-card>
     </span>
 
     <!-- show scatter plot of demand vs. output-->
@@ -101,6 +101,11 @@
         cardColor: {
           type: String,
           value: "white"
+        },
+        demand: {
+          type: Number,
+          value: 123,
+          notify: true
         }
       },
 

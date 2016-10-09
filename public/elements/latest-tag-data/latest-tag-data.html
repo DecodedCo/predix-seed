@@ -72,9 +72,13 @@
       },
       cardColor: {
         type: String
+      },
+      demand: {
+        type: Number,
+        notify: true
       }
     },
-    _tagChanged: function ready(){
+    _tagChanged: function (){
       if(this.tag){
         if(!this.windspeed){
           this.latestPointBody = {
@@ -103,6 +107,9 @@
         this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
         this.empty = !this._hasValue();
         this.time = "As of " + this._formatTime().slice(4,24);
+        if(this.demand){
+          this.set('demand', this.latestTSPoint);
+        }
       }
     },
     _hasValue: function(){
