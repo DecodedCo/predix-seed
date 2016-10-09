@@ -24,32 +24,38 @@
     <!-- Show latest value on one card per tag -->
     <span class="layout">
       <latest-data-card id="coalTag" class="layout__item"
-        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]"></latest-data-card>
+        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="gasTag" class="layout__item"
-        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]"></latest-data-card>
+        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="windPowerTag" class="layout__item"
-        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]"></latest-data-card>
+        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="totalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]"></latest-data-card>
+        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="temperatureTag" class="layout__item"
-        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]"></latest-data-card>
+        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="humidityTag" class="layout__item"
-        card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]"></latest-data-card>
+        card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <!-- How can we set the windSpeed variable? -->
       <latest-data-card id="windSpeed" class="layout__item"
-        card-title="Wind Speed (m/s)" tag="WindSpeed" windspeed></latest-data-card>
+        card-title="Wind Speed (m/s)" tag="WindSpeed" windspeed card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand"></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card>
     </span>
 
     <!-- show scatter plot of demand vs. output-->
-    <scatter-plot-card card-title="Scatter Plot Card" output-tag="TotalPower-xlp-[[deviceName]]" demand-tag="Demand"></scatter-plot-card>
+    <!-- <scatter-plot-card card-title="Scatter Plot Card" output-tag="TotalPower-xlp-[[deviceName]]" demand-tag="Demand" card-color="[[cardColor]]"></scatter-plot-card> -->
     <!-- Show time series data as a line chart -->
-    <time-series-card id="tsLineChart" card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar></time-series-card>
+    <time-series-card id="tsLineChart"
+        card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card>
     <!-- Show time series data as a bar chart -->
-    <time-series-card id="tsBarChart" card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line></time-series-card>
+    <time-series-card id="tsBarChart"
+        card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line card-color="[[cardColor]]">
+    </time-series-card>
     <!-- Show time series for just one tag, no dropdown -->
-    <time-series-card id="tsSingleTag" card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-trainer-03')]]" hide-line></time-series-card>
+    <time-series-card id="tsSingleTag"
+        card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-trainer-03')]]" hide-line card-color="[[cardColor]]">
+    </time-series-card>
 
   </template>
   <script>
@@ -72,6 +78,10 @@
         deviceName: {
           type: String,
           value: deviceName
+        },
+        cardColor: {
+          type: String,
+          value: "white"
         }
       },
 

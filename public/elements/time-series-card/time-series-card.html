@@ -33,7 +33,7 @@
           on-response="_onResponse"
     ></iron-ajax>
 
-    <px-card header-text="[[cardTitle]]">
+    <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div style="margin-bottom:1em;">
         <px-rangepicker
             style="width: 60%;display:inline-block;"
@@ -119,6 +119,9 @@
       hideChevron: {
         type: Boolean,
         value: true
+      },
+      cardColor: {
+        type: String
       }
     },
     ready: function ready(){

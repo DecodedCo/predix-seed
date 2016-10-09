@@ -22,7 +22,7 @@
       name-key="name"
       chart-data="{{chartData}}">
     </px-vis-data-converter>
-    <px-card header-text="[[cardTitle]]">
+    <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div style="margin-bottom:10px;">
         <px-rangepicker
             id="rangePicker"
@@ -99,6 +99,9 @@
         },
         seriesConfig: {
           type: Object
+        },
+        cardColor: {
+          type: String
         }
       },
       ready: function ready(){
