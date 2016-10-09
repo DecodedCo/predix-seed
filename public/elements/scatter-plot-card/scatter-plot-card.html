@@ -14,13 +14,7 @@
           handle-as="json"
           content-type="application/json"
           on-response="_demandResponse"
-          auto
     ></iron-ajax>
-    <!-- <iron-ajax
-      url="/api/time-series/scatter/1"
-      handle-as="json"
-      last-response="{{data}}" auto>
-    </iron-ajax>       id-key = "[[idKey]]",       series-config="{{seriesConfig}}"-->
     <px-vis-data-converter
       data-key="data"
       original-data="[[someData]]"
@@ -29,6 +23,17 @@
       chart-data="{{chartData}}">
     </px-vis-data-converter>
     <px-card header-text="[[cardTitle]]">
+      <div style="margin-bottom:10px;">
+        <px-rangepicker
+            id="rangePicker"
+            block-future-dates="true"
+            date-format="YYYY/MM/DD"
+            time-format="hh:mm:ss A"
+            show-buttons="true"
+            hide-presets="true"
+            >
+        </px-rangepicker>
+      </div>
       <px-vis-xy-chart
         id="chart"
         chart-data="[[chartData]]"
@@ -74,13 +79,13 @@
         timeseriesBody: {
           type:Object,
           value:{
-              "start": "2d-ago",
-              "end": "1d-ago",
+              "start": "24h-ago",
+              "end": "1min-ago",
               "tags": [{
-                "name": [ 'Demand' ]
+                "name": [ ]
               },
               {
-                "name": [ 'TotalPower-xlp-trainer-03' ]
+                "name": []
               }]
           }
         },
@@ -95,6 +100,27 @@
         seriesConfig: {
           type: Object
         }
+      },
+      ready: function ready(){
+        let date = new Date();
+        this.$.rangePicker.range = {
+          "from": new Date(date.getTime() - 43200000).toISOString(), //"2016-01-01T01:00:00.000Z",
+          "to": new Date(date.getTime()).toISOString()
+        };
+        this.$.rangePicker.addEventListener('px-datetime-range-submitted', () => {
+          this._dateRangeChanged();
+          this.$.getData.generateRequest();
+        });
+        this.timeseriesBody.tags[0].name = [this.demandTag];
+        this.timeseriesBody.tags[1].name = [this.outputTag];
+        this.$.getData.generateRequest();
+      },
+      _dateRangeChanged: function(){
+        let start = +new Date(this.$.rangePicker.range.from);
+        let end = +new Date(this.$.rangePicker.range.to);
+
+        this.timeseriesBody.start = start;
+        this.timeseriesBody.end = end;
       },
       _demandResponse: function(e, data){
         let tagName = data.response.tags[0].name;
@@ -141,6 +167,7 @@
               "y": this.outputTag
             }
           });
+        this.set('someData', []);
         this.push('someData', outputData);
         this.push('someData', demandData);
       }
