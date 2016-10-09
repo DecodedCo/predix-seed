@@ -73,7 +73,7 @@
       cardColor: {
         type: String
       },
-      demand: {
+      boundValue: {
         type: Number,
         notify: true
       }
@@ -107,8 +107,8 @@
         this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
         this.empty = !this._hasValue();
         this.time = "As of " + this._formatTime().slice(4,24);
-        if(this.demand){
-          this.set('demand', this.latestTSPoint);
+        if(this.boundValue){
+          this.set('boundValue', this.latestTSPoint);
         }
       }
     },

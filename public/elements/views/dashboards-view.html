@@ -49,7 +49,7 @@
       <latest-data-card id="windPowerTag" class="layout__item"
         card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="totalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card>
       <latest-data-card id="temperatureTag" class="layout__item"
         card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="humidityTag" class="layout__item"
@@ -58,7 +58,7 @@
       <latest-data-card id="windSpeed" class="layout__item"
         card-title="Wind Speed (m/s)" tag="WindSpeed" windspeed card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" demand={{demand}}></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card>
     </span>
 
     <!-- show scatter plot of demand vs. output-->
@@ -104,7 +104,12 @@
         },
         demand: {
           type: Number,
-          value: 123,
+          value: 1,
+          notify: true
+        },
+        output: {
+          type: Number,
+          value: 1,
           notify: true
         }
       },
