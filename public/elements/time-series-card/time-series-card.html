@@ -64,7 +64,7 @@
           </px-dropdown-content>
         </px-dropdown>
       </div>
-      <px-chart hidden$="[[hideBar]]">
+      <px-chart hidden$="[[hideBar]]" id="barChart">
         <px-chart-series-bar
           parent-component='["<px-chart>","</px-chart>"]'
           id="temp"
@@ -200,6 +200,10 @@
               this.tsData.shift();
             }
             this.push('tsData', latestPoint);
+            if(!this.hideBar){
+              this.$.barChart.chart.series[0].addPoint(latestPoint, true, true);
+              this.$.barChart.chart.series[1].addPoint(latestPoint, true, true);
+            }
           }
         }
         else {
