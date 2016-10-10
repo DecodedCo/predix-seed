@@ -6,8 +6,8 @@
 <link rel="import" href="/bower_components/px-rangepicker/px-rangepicker.html">
 <link rel="import" href="/bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
 
-<!-- <script type="text/javascript" src="/bower_components/px/dist/px.min.js"></script> -->
 
 <dom-module id="time-series-card">
   <template>
@@ -34,7 +34,10 @@
     ></iron-ajax>
 
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
-      <div style="margin-bottom:1em;">
+      <div style="padding:10px;display:inline-block;">
+         <paper-toggle-button id="toggleBtn" checked> Historical Data </paper-toggle-button>
+      </div>
+      <div style="margin-bottom:1em; width:100%">
         <px-rangepicker
             style="width: 60%;display:inline-block;"
             id="tsRangePicker"
@@ -43,8 +46,10 @@
             time-format="hh:mm:ss A"
             show-buttons="true"
             hide-presets="true"
+            hidden$="[[!historical]]"
             >
         </px-rangepicker>
+        <div style="width:60%; display:inline-block;" hidden$="[[historical]]"></div>
         <px-dropdown id="dropdown"
           display-value="[[tags.0]]" style="width: 20%;display:inline-block;float:right;"
           hide-chevron="[[hideChevron]]"
@@ -122,6 +127,10 @@
       },
       cardColor: {
         type: String
+      },
+      historical: {
+        type: Boolean,
+        value: true
       }
     },
     ready: function ready(){
@@ -137,6 +146,10 @@
       this.$.dropdown.addEventListener('dropdown_content_value_changed', (e) => {
         this._tagChange(e.detail.textValue);
       });
+      this.$.toggleBtn.addEventListener('change', (e) => {
+          this.set('historical', !this.historical);
+          this._tagChange(this.tagName);
+      });
     },
     _tags: function(){
       if(this.tags.length > 0){
@@ -150,10 +163,21 @@
       this.tagName = tag;
       this.timeseriesBody.tags = [
         {
+          "name": [ tag ],
+          "aggregations": [{
+            "type": "avg",
+            "sampling": {
+              "unit": "s",
+              "value": "45"
+            }
+          }]
+        }
+      ];
+      this.latestPointBody.tags = [
+        {
           "name": [ tag ]
         }
       ];
-      this.latestPointBody.tags = this.timeseriesBody.tags;
       this.$.getTimeseries.generateRequest();
     },
     _updateData: function(){
@@ -162,18 +186,25 @@
       }, 10000);
     },
     _onResponse: function(e, details) {
-      this._updateData();
-      let latestPoint = details.response.tags[0].results[0].values[0];
-      latestPoint = {
-        x: latestPoint[0],
-        y: latestPoint[1]
-      }
-      if(latestPoint.x !== this.tsData[this.tsData.length-1].x){
-        if(this.tsData.length > 500){ //limit the chart to 500 points?
-          this.tsData.shift();
+      if(!this.historical){
+        this._updateData();
+
+        let latestPoint = details.response.tags[0].results[0].values[0];
+        latestPoint = {
+          x: latestPoint[0],
+          y: latestPoint[1]
         }
-        console.log("push new point");
-        this.push('tsData', latestPoint);
+        if(this.tsData.length > 0){
+          if(latestPoint.x !== this.tsData[this.tsData.length-1].x){
+            if(this.tsData.length > 500){ //limit the chart to 500 points?
+              this.tsData.shift();
+            }
+            this.push('tsData', latestPoint);
+          }
+        }
+        else {
+          this.push('tsData', latestPoint);
+        }
       }
     },
     _parseTSData: function(e, details) {
@@ -188,7 +219,10 @@
         arr.push(point);
       });
       this.set('tsData', arr);
-      this.$.getLatestPoint.generateRequest()
+
+      if(!this.historical){
+        this.$.getLatestPoint.generateRequest();
+      }
     },
     _dateRangeChanged: function(){
       let start = +new Date(this.$.tsRangePicker.range.from);
