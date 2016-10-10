@@ -30,14 +30,7 @@
           content-type="application/json"
           on-response="_tagResponse"
     ></iron-ajax>
-    <div class="alert-message-container">
-      <px-alert-message hidden
-        type="important"
-        message-title="Important!"
-        message="Demand is greater than total power output."
-        action="dismiss"
-        auto-dismiss="5000">
-      </px-alert-message>
+    <div id="alert" class="alert-message-container">
     </div>
 
     <!-- Show latest value on one card per tag -->
@@ -104,18 +97,33 @@
         },
         demand: {
           type: Number,
-          value: 1,
-          notify: true
+          value: -1,
+          notify: true,
+          observer: "compareDemandOutput"
         },
         output: {
           type: Number,
-          value: 1,
-          notify: true
+          value: -1,
+          notify: true,
+          observer: "compareDemandOutput"
         }
       },
-
       ready: function ready() {
         var _this = this;
+      },
+      compareDemandOutput: function(){
+        if(this.demand && this.output) {
+          if(this.demand !== -1 && this.output !== -1 && this.demand > this.output){
+            //create px-alert-message element
+            var el = document.createElement("px-alert-message");
+            el.type = "important";
+            el.messageTitle = "Important!";
+            el.message = "Demand is greater than total power output.";
+            el.action = "dismiss";
+            el.autoDismiss = "5000";
+            document.getElementById('alert').appendChild(el);
+          }
+        }
       },
       _tagResponse: function(e, details){
         let tags = details.response.results;
