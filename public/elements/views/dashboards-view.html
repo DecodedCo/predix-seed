@@ -65,7 +65,7 @@
     </time-series-card>
     <!-- Show time series for just one tag, no dropdown -->
     <time-series-card id="tsSingleTag"
-        card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-50')]]" hide-line card-color="[[cardColor]]">
+        card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-')]]" hide-line card-color="[[cardColor]]">
     </time-series-card>
 
   </template>
@@ -146,7 +146,7 @@
       },
       _setTag: function(tag){
         let temp = [];
-        temp.push(tag);
+        temp.push(tag + deviceName);
         return temp;
       }
     });
