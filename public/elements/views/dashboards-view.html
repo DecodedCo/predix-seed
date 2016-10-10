@@ -65,14 +65,14 @@
     </time-series-card>
     <!-- Show time series for just one tag, no dropdown -->
     <time-series-card id="tsSingleTag"
-        card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-trainer-03')]]" hide-line card-color="[[cardColor]]">
+        card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-50')]]" hide-line card-color="[[cardColor]]">
     </time-series-card>
 
   </template>
   <script>
 
     // This is the device name you are using
-    var deviceName = 'trainer-03';
+    var deviceName = '50';
 
     Polymer({
 
@@ -120,7 +120,7 @@
             el.message = "Demand is greater than total power output.";
             el.action = "dismiss";
             el.autoDismiss = "5000";
-            document.getElementById('alert').appendChild(el);
+          //  document.getElementById('alert').appendChild(el);
           }
         }
       },
@@ -132,7 +132,7 @@
         };
 
         tags.forEach((tag) => {
-          if(tag.indexOf(this.deviceName)!== -1 || tag == "Demand"){
+          if(tag.indexOf(deviceName)!== -1 || tag == "Demand"){
             temp.push(tag);
             component.tags.push({
               name: [ tag ]
