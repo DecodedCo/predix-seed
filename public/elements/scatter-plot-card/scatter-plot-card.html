@@ -82,10 +82,24 @@
               "start": "24h-ago",
               "end": "1min-ago",
               "tags": [{
-                "name": [ ]
+                "name": [ ],
+                "aggregations": [{
+            			"type": "avg",
+            			"sampling": {
+            				"unit": "s",
+            				"value": "10"
+            			}
+            		}]
               },
               {
-                "name": []
+                "name": [],
+                "aggregations": [{
+            			"type": "avg",
+            			"sampling": {
+            				"unit": "s",
+            				"value": "10"
+            			}
+            		}]
               }]
           }
         },
