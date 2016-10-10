@@ -1,0 +1,26 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/px-card/px-card.html">
+<link rel="import" href="/bower_components/px-vis-pie-chart/px-vis-pie-chart.html">
+<!-- <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html"> -->
+
+
+<dom-module id="pie-chart-card">
+  <template>
+    <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
+      YAY
+    </px-card>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'pie-chart-card',
+    properties: {
+      cardTitle:{
+        type: String
+      },
+      cardColor: {
+        type: String
+      }
+    }
+  });
+</script>

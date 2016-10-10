@@ -5,6 +5,7 @@
 <link rel="import" href="/elements/time-series-card/time-series-card.html">
 <link rel="import" href="/elements/values-card/values-card.html">
 <link rel="import" href="/elements/latest-tag-data/latest-tag-data.html">
+<link rel="import" href="/elements/pie-chart-card/pie-chart-card.html">
 <link rel="import" href="/bower_components/px-alert-message/px-alert-message.html">
 <style media="screen">
   .alert-message-container {
@@ -53,8 +54,10 @@
         card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card>
     </span>
 
+    <pie-chart-card id="pieChart"
+        card-title="Pie Chart" card-color="[[cardColor]]"></pie-chart-card>
     <!-- show scatter plot of demand vs. output-->
-    <scatter-plot-card card-title="Scatter Plot Card" output-tag="TotalPower-xlp-[[deviceName]]" demand-tag="Demand" card-color="[[cardColor]]"></scatter-plot-card>
+    <!-- <scatter-plot-card card-title="Scatter Plot Card" output-tag="TotalPower-xlp-[[deviceName]]" demand-tag="Demand" card-color="[[cardColor]]"></scatter-plot-card> -->
     <!-- Show time series data as a line chart -->
     <time-series-card id="tsLineChart"
         card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
