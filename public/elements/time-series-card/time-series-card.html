@@ -161,6 +161,11 @@
     },
     _tagChange: function(tag){
       this.tagName = tag;
+      if(!this.hideBar && typeof this.$.barChart.chart !== 'undefined'){
+        this.$.barChart.chart.series[0].update({name:this.tagName}, false);
+        this.$.barChart.chart.series[1].update({name:this.tagName}, false);
+        this.$.barChart.chart.redraw();
+      }
       this.timeseriesBody.tags = [
         {
           "name": [ tag ],
