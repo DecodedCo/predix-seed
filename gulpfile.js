@@ -36,4 +36,4 @@ require('web-component-tester')
 // -----------------------------------------------------------------------------
 //  Task: Default (compile source, start server, watch for changes)
 // -----------------------------------------------------------------------------
-gulp.task('default', ['compile:all', 'serve:start', 'watch:public']);
+gulp.task('default', ['compile:sass', 'compile:all', 'serve:start', 'watch:public']);
