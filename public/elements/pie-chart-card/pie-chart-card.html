@@ -7,14 +7,15 @@
 <dom-module id="pie-chart-card">
   <template>
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
-      <px-vis-pie-chart
+      <px-vis-pie-chart id="pieChart"
         use-percentage="true"
-        width="524.046875"
+        width="550"
         height="350"
         register-config='{"width":150,"type":"vertical"}'
         margin='{"top":"10","bottom":"10","left":"0","right":"0"}'
-        series-config='{"mySerie":{"xAxisUnit":"pints","y":"y","x":"x"}}'
-        chart-data="{{chartData}}"
+
+        chart-data="[[chartData]]"
+        includeAllSeries
         >
       </px-vis-pie-chart>
     </px-card>
@@ -30,37 +31,17 @@
       cardColor: {
         type: String
       },
-      chartData: {
+      pieData: {
         type: Array,
-        value: [{
-        	"x": 15,
-        	"y": "IPA"
-        }, {
-        	"x": 1,
-        	"y": "Pils"
-        }, {
-        	"x": 1,
-        	"y": "Lager"
-        }, {
-        	"x": 8,
-        	"y": "Lambic"
-        }, {
-        	"x": 12,
-        	"y": "Stout"
-        },
-        {
-        	"x": 7,
-        	"y": "Pale Ale"
-        },
-        {
-        	"x": 9,
-        	"y": "Porter"
-        },
-        {
-        	"x": 4,
-        	"y": "Heffeweisse"
-        }]
+        observer: 'dataChanged'
+      },
+      chartData: {
+        type: Array
       }
+    },
+    dataChanged: function(){
+      this.set('chartData', []);
+      this.set('chartData', this.pieData);
     }
   });
 </script>

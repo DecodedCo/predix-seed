@@ -37,11 +37,11 @@
     <!-- Show latest value on one card per tag -->
     <span class="layout">
       <latest-data-card id="coalTag" class="layout__item"
-        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value="{{coalPower}}"></latest-data-card>
       <latest-data-card id="gasTag" class="layout__item"
-        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value="{{gasPower}}"></latest-data-card>
       <latest-data-card id="windPowerTag" class="layout__item"
-        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value="{{windPower}}"></latest-data-card>
       <latest-data-card id="totalPowerTag" class="layout__item"
         card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card>
       <latest-data-card id="temperatureTag" class="layout__item"
@@ -55,9 +55,7 @@
     </span>
 
     <pie-chart-card id="pieChart"
-        card-title="Pie Chart" card-color="[[cardColor]]"></pie-chart-card>
-    <!-- show scatter plot of demand vs. output-->
-    <!-- <scatter-plot-card card-title="Scatter Plot Card" output-tag="TotalPower-xlp-[[deviceName]]" demand-tag="Demand" card-color="[[cardColor]]"></scatter-plot-card> -->
+        card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card>
     <!-- Show time series data as a line chart -->
     <time-series-card id="tsLineChart"
         card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
@@ -108,6 +106,25 @@
           value: -1,
           notify: true,
           observer: "compareDemandOutput"
+        },
+        coalPower: {
+          type: Number,
+          value: -1,
+          notify: true,
+          observer: '_setPieData'
+        },
+        windPower: {
+          type: Number,
+          value: -1,
+          observer: '_setPieData'
+        },
+        gasPower: {
+          type: Number,
+          value: -1,
+          observer: '_setPieData'
+        },
+        pieData: {
+          type: Array
         }
       },
       ready: function ready() {
@@ -123,7 +140,7 @@
             el.message = "Demand is greater than total power output.";
             el.action = "dismiss";
             el.autoDismiss = "5000";
-          //  document.getElementById('alert').appendChild(el);
+            document.getElementById('alert').appendChild(el);
           }
         }
       },
@@ -151,6 +168,24 @@
         let temp = [];
         temp.push(tag + deviceName);
         return temp;
+      },
+      _setPieData: function(){
+        if(this.coalPower > -1 && this.gasPower > -1 && this.windPower > -1 && this.output > -1){
+          this.pieData = [
+            {
+              "x": this.coalPower,
+              "y": 'Coal Power'
+            },
+            {
+              "x": this.windPower,
+              y: 'Wind Power'
+            },
+            {
+              "x": this.gasPower,
+              "y": 'Gas Power'
+            }
+          ];
+        }
       }
     });
   </script>
