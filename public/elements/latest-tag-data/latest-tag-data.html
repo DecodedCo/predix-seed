@@ -29,7 +29,7 @@
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div class="layout">
         <div class="layout__item">[[tag]] <br>
-          <h2 hidden$="[[empty]]"> [[latestTSPoint]]</h2>
+          <h2 hidden$="[[empty]]" style="color: [[textColor]]"> [[latestTSPoint]]</h2>
           <h2 hidden$="[[!empty]]"> N/A</h2>
           <div hidden$="[[empty]]">* [[time]]</div>
           <div hidden$="[[!empty]]">Data not available</div>
@@ -76,6 +76,19 @@
       boundValue: {
         type: Number,
         notify: true
+      },
+      threshold: {
+        type: Object
+        /// needs object with upper, lower, color
+        // {
+        //   upper: 100,
+        //   lower: 0,
+        //   color: red
+        // }
+      },
+      textColor: {
+        type: String,
+        value: 'black'
       }
     },
     _tagChanged: function (){
@@ -107,6 +120,14 @@
         this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
         this.empty = !this._hasValue();
         this.time = "As of " + this._formatTime().slice(4,24);
+        if(typeof this.threshold !== 'undefined'){
+          if(this.latestTSPoint > this.threshold.upper || this.latestTSPoint < this.threshold.lower){
+            this.set('textColor', this.threshold.color);
+          }
+          else{
+            this.set('textColor', 'black');
+          }
+        }
         if(this.boundValue){
           this.set('boundValue', this.latestTSPoint);
         }

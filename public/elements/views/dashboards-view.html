@@ -65,6 +65,9 @@
     <time-series-card id="tsSingleTag"
         card-title="Time Series Card - Line" tags="[[_setTag('Temperature-xlp-')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
+    <time-series-card id="tsSingleTag"
+        card-title="Time Series Card - Line" tags="[[_setTag('Demand')]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card>
 
     <!-- Show time series for just one tag, no dropdown -->
     <time-series-card id="tsSingleTag"
@@ -136,6 +139,16 @@
         },
         pieData: {
           type: Array
+        },
+        thresholds: {
+          type: Object,
+          // value: {
+          //   'demand': {
+          //      upper: 100,
+          //      lower: 0,
+          //      color: 'red'
+          //   }
+          // }
         }
       },
       ready: function ready() {
@@ -178,12 +191,15 @@
       },
       _setTag: function(tag){
         let temp = [];
+        if(tag === 'Demand'){
+          deviceName = '';
+        }
         temp.push(tag + deviceName);
         return temp;
       },
       _setPieData: function(){
-        if(this.coalPower > -1 && this.gasPower > -1 && this.windPower){
 
+        if(this.coalPower > -1 && this.gasPower > -1 && this.windPower > -1){
           this.pieData = [
             {
               "x": this.coalPower,
