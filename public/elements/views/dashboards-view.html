@@ -22,6 +22,7 @@
 
     <script type="text/javascript" src="../../bower_components/es6-promise/es6-promise.min.js"></script>
 
+    <!-- Retrieve list of all tags -->
     <iron-ajax
           id="getTags"
           auto
@@ -36,39 +37,33 @@
 
     <!-- Show latest value on one card per tag -->
     <span class="layout">
-      <latest-data-card id="coalTag" class="layout__item"
-        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value="{{coalPower}}"></latest-data-card>
-      <latest-data-card id="gasTag" class="layout__item"
-        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value="{{gasPower}}"></latest-data-card>
-      <latest-data-card id="windPowerTag" class="layout__item"
-        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value="{{windPower}}"></latest-data-card>
-      <latest-data-card id="totalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card>
+      <!-- Show realtime temperature -->
       <latest-data-card id="temperatureTag" class="layout__item"
         card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="humidityTag" class="layout__item"
-        card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="windSpeed" class="layout__item"
-        card-title="Wind Speed (m/s)" tag="WindSpeed" windspeed card-color="[[cardColor]]"></latest-data-card>
+      <!-- Show realtime demand, and make accessible elsewhere on dashboard -->
       <latest-data-card id="demand" class="layout__item"
         card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card>
     </span>
 
-    <pie-chart-card id="pieChart"
+    <!-- Pie chart - requires all power tags -->
+<!--     <pie-chart-card id="pieChart"
         card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card>
-    <!-- Show time series data as a line chart -->
-    <time-series-card id="tsLineChart"
-        card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card>
-    <!-- Show time series data as a bar chart -->
-    <time-series-card id="tsBarChart"
-        card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line card-color="[[cardColor]]">
-    </time-series-card>
+ -->
+
     <!-- Show time series for just one tag, no dropdown -->
     <time-series-card id="tsSingleTag"
-        card-title="Time Series Card - Bar" tags="[[_setTag('Humidity-xlp-')]]" hide-line card-color="[[cardColor]]">
+        card-title="Time Series Card - Line" tags="[[_setTag('Temperature-xlp-')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
 
+    <!-- Show time series data as a line chart for all tags -->
+<!--     <time-series-card id="tsLineChart"
+        card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card>
+ -->    <!-- Show time series data as a bar chart for all tags -->
+<!--     <time-series-card id="tsBarChart"
+        card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line card-color="[[cardColor]]">
+    </time-series-card>
+ -->
   </template>
   <script>
 
@@ -140,7 +135,8 @@
             el.message = "Demand is greater than total power output.";
             el.action = "dismiss";
             el.autoDismiss = "5000";
-            document.getElementById('alert').appendChild(el);
+            // Uncomment the following line to show alerts
+            //document.getElementById('alert').appendChild(el);
           }
         }
       },
