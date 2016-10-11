@@ -54,6 +54,9 @@
     <time-series-card id="tsSingleTag"
         card-title="Time Series Card - Line" tags="[[_setTag('Temperature-xlp-')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
+    <time-series-card id="tsSingleTag"
+        card-title="Time Series Card - Line" tags="[[_setTag('Demand')]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card>
 
     <!-- Show time series data as a line chart for all tags -->
 <!--     <time-series-card id="tsLineChart"
@@ -162,6 +165,9 @@
       },
       _setTag: function(tag){
         let temp = [];
+        if(tag === 'Demand'){
+          deviceName = '';
+        }
         temp.push(tag + deviceName);
         return temp;
       },
