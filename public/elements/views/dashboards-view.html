@@ -40,29 +40,45 @@
       <!-- Show realtime temperature -->
       <latest-data-card id="temperatureTag" class="layout__item"
         card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+      <latest-data-card id="humidityTag" class="layout__item"
+        card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+      <latest-data-card id="CoalPowerTag" class="layout__item"
+        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{coalPower}}></latest-data-card>
+      <latest-data-card id="GasPowerTag" class="layout__item"
+        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card>
+      <latest-data-card id="WindPowerTag" class="layout__item"
+        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card>
+      <latest-data-card id="TotalPowerTag" class="layout__item"
+        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <!-- Show realtime demand, and make accessible elsewhere on dashboard -->
+      <latest-data-card id="windSpeed" class="layout__item"
+        card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card>
     </span>
 
     <!-- Pie chart - requires all power tags -->
-<!--     <pie-chart-card id="pieChart"
+    <pie-chart-card id="pieChart"
         card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card>
- -->
 
     <!-- Show time series for just one tag, no dropdown -->
-    <time-series-card id="tsSingleTag"
+<!--     <time-series-card id="tsSingleTag"
         card-title="Time Series Card - Line" tags="[[_setTag('Temperature-xlp-')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
     <time-series-card id="tsSingleTag"
         card-title="Time Series Card - Line" tags="[[_setTag('Demand')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
+ -->
+    <!-- Show time series for just one tag, no dropdown -->
+<!--     <time-series-card id="tsSingleTag"
+        card-title="Demand - Line" tags="[[_setTag('CoalPower-xlp-')]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card> -->
 
     <!-- Show time series data as a line chart for all tags -->
-<!--     <time-series-card id="tsLineChart"
+    <time-series-card id="tsLineChart"
         card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
- -->    <!-- Show time series data as a bar chart for all tags -->
+    <!-- Show time series data as a bar chart for all tags -->
 <!--     <time-series-card id="tsBarChart"
         card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line card-color="[[cardColor]]">
     </time-series-card>
@@ -71,7 +87,7 @@
   <script>
 
     // This is the device name you are using
-    var deviceName = 'XX';
+    var deviceName = 'trainer-03';
 
     Polymer({
 
@@ -161,7 +177,7 @@
         };
 
         tags.forEach((tag) => {
-          if(tag.indexOf(deviceName)!== -1 || tag == "Demand"){
+          if(tag.indexOf(deviceName)!== -1 || tag == "Demand" || tag == "WindSpeed"){
             temp.push(tag);
             component.tags.push({
               name: [ tag ]
@@ -182,6 +198,7 @@
         return temp;
       },
       _setPieData: function(){
+
         if(this.coalPower > -1 && this.gasPower > -1 && this.windPower > -1){
           this.pieData = [
             {
