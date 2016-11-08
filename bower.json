@@ -73,6 +73,19 @@
     "px-simple-bar-chart": "^1.5.1",
     "px-overlay": "~0.2.0",
     "px-rangepicker": "~1.1.0",
-    "px-typography-design": "^1.1.0"
+    "px-typography-design": "^1.1.0",
+    "px-dropdown": "~0.12.1",
+    "px-defaults-design": "^0.3.0",
+    "px-vis": "~0.6.0",
+    "px-iconography-design": "^0.3.1",
+    "px-functions-design": "~1.0.0",
+    "px-datetime-common": "~0.6.1",
+    "px-datetime-range-field": "~0.4.1",
+    "px-popover": "~1.5.0",
+    "px-actionable-text-icons-design": "^0.1.0",
+    "numbro": "~1.9.0",
+    "px-datetime-range-panel": "~0.3.0",
+    "px-calendar-picker": "~0.5.0",
+    "px-datetime-field": "~0.5.0"
   }
 }
