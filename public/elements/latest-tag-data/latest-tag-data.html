@@ -17,15 +17,6 @@
           content-type="application/json"
           on-response="_onResponse"
     ></iron-ajax>
-<!--     <iron-ajax
-          id="getWindspeed"
-          method="GET"
-          url="/external/api/windspeed"
-          handle-as="json"
-          content-type="application/json"
-          on-response="_windSpeedResponse"
-    ></iron-ajax>
- -->
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div class="layout">
         <div class="layout__item">[[tag]] <br>
@@ -66,10 +57,6 @@
       time: {
         type: String
       },
-      windspeed: {
-        type: Boolean,
-        value: false
-      },
       cardColor: {
         type: String
       },
@@ -93,7 +80,6 @@
     },
     _tagChanged: function (){
       if(this.tag){
-//        if(!this.windspeed){
           this.latestPointBody = {
             "tags": [
               {
@@ -102,10 +88,6 @@
             ]
           };
           this.$.stuff.generateRequest();
-//        }
-        // else if(this.windspeed){
-        //   this.$.getWindspeed.generateRequest();
-        // }
       }
     },
     _updateData: function(){
@@ -143,11 +125,6 @@
       if(this.data){
         return new Date(this.data[0].results[0].values[0][0]).toString();
       }
-    },
-    _windSpeedResponse: function(e, details){
-      this.latestTSPoint = details.response.windspeed;
-      this.empty = !this._hasValue();
-      this.time = "Time not available"
-    },
+    }
   });
 </script>
