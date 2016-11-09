@@ -6,7 +6,6 @@
     "base64ClientCredential": "eGxwdXNlcjA0LXVhYS1jbGllbnQ6Y2xpZW50LXNlY3JldA==",
     "appURL": "http://localhost:5000",
     "timeseriesURL": "https://time-series-store-predix.run.aws-usw02-pr.ice.predix.io/v1/datapoints",
-    "timeseriesZoneId": "13bf79cf-27e6-4dd2-a0a6-b8bef2152c2a",
-    "externalURL": "https://ge-wind.herokuapp.com/api/demand"
+    "timeseriesZoneId": "13bf79cf-27e6-4dd2-a0a6-b8bef2152c2a"
   }
 }

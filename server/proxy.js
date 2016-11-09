@@ -143,17 +143,6 @@ var setProxyRoute = function(key, credentials) {
 	}));
 };
 
-router.use('/demand', expressProxy("https://ge-wind.herokuapp.com/api/demand", {
-	https: true,
-	forwardPath: function (req) {
-		console.log("######### PROXIED : " + JSON.stringify(req));
-		//return require('url').parse(req.url).path;
-		//return require('url').parse(req.baseUrl).path;
-		return req.url;
-	},
-	intercept: cleanResponseHeaders,
-}));
-
 // Fetches client token and stores in session.
 router.use('/', function(req,res,next){
 	function errorHandler(errorString) {

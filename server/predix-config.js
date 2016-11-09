@@ -24,8 +24,6 @@ if(node_env === 'development') {
 	settings.assetZoneId = devConfig.assetZoneId;
 	settings.timeseriesZoneId = devConfig.timeseriesZoneId;
 	settings.timeseriesURL = devConfig.timeseriesURL;
-	settings.externalURL = devConfig.externalURL;
-
 } else {
 	// read VCAP_SERVICES
 	var vcapsServices = JSON.parse(process.env.VCAP_SERVICES);
@@ -46,7 +44,6 @@ if(node_env === 'development') {
 		settings.timeseriesURL = timeseriesService[0].credentials.query.uri;
 	}
 
-	settings.externalURL = "https://ge-wind.herokuapp.com/";
 	// read VCAP_APPLICATION
 	var vcapsApplication = JSON.parse(process.env.VCAP_APPLICATION);
 	settings.callbackURL = 'https://' + vcapsApplication.uris[0] + '/callback';
@@ -84,13 +81,6 @@ settings.buildVcapObjectFromLocalConfig = function(config) {
 				zone: {
 					'http-header-value': config.assetZoneId
 				}
-			}
-		}];
-	}
-	if (config.externalURL) {
-		vcapObj['external'] = [{
-			credentials: {
-				uri: config.externalURL
 			}
 		}];
 	}
