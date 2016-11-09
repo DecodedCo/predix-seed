@@ -38,7 +38,7 @@
     <!-- Show latest value on one card per tag -->
     <span class="layout">
       <!-- Show realtime temperature -->
-      <latest-data-card id="temperatureTag" class="layout__item"
+      <!-- <latest-data-card id="temperatureTag" class="layout__item"
         card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="humidityTag" class="layout__item"
         card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
@@ -49,17 +49,17 @@
       <latest-data-card id="WindPowerTag" class="layout__item"
         card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card>
       <latest-data-card id="TotalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
       <!-- Show realtime demand, and make accessible elsewhere on dashboard -->
-      <latest-data-card id="windSpeed" class="layout__item"
+      <!-- <latest-data-card id="windSpeed" class="layout__item"
         card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card> -->
     </span>
 
     <!-- Pie chart - requires all power tags -->
-    <pie-chart-card id="pieChart"
-        card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card>
+    <!-- <pie-chart-card id="pieChart"
+        card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card> -->
 
     <!-- Show time series for just one tag, no dropdown -->
 <!--     <time-series-card id="tsSingleTag"
@@ -87,7 +87,7 @@
   <script>
 
     // This is the device name you are using
-    var deviceName = 'trainer-03';
+    var deviceName = '54';
 
     Polymer({
 
@@ -177,7 +177,7 @@
         };
 
         tags.forEach((tag) => {
-          if(tag.indexOf(deviceName)!== -1 || tag == "Demand" || tag == "WindSpeed"){
+          if(tag.includes(deviceName)){
             temp.push(tag);
             component.tags.push({
               name: [ tag ]
