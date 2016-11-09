@@ -22,7 +22,7 @@
           on-response="_parseTSData"
     ></iron-ajax>
     <!-- Add in for "real time charts" -->
-    <iron-ajax
+    <!-- <iron-ajax
           id="getLatestPoint"
           method="POST"
           url="/predix-api/predix-timeseries/v1/datapoints/latest"
@@ -31,7 +31,7 @@
           content-type="application/json"
           last-response="{{latest}}"
           on-response="_onResponse"
-    ></iron-ajax>
+    ></iron-ajax> -->
 
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div style="padding:10px;display:inline-block;">
@@ -50,21 +50,8 @@
             >
         </px-rangepicker>
         <div style="width:60%; display:inline-block;" hidden$="[[historical]]"></div>
-        <px-dropdown id="dropdown"
-          display-value="[[tags.0]]" style="width: 20%;display:inline-block;float:right;"
-          hide-chevron="[[hideChevron]]"
-          >
-          <px-dropdown-content class="px-dropdown-content"
-            extend-dropdown="true"
-            extend-dropdown-by="25"
-            max-cont-character-width="10"
-            items='[[tags]]'
-            hidden$="[[hideChevron]]"
-            >
-          </px-dropdown-content>
-        </px-dropdown>
       </div>
-      <px-chart hidden$="[[hideBar]]" id="barChart">
+      <!-- <px-chart hidden$="[[hideBar]]" id="barChart">
         <px-chart-series-bar
           parent-component='["<px-chart>","</px-chart>"]'
           id="temp"
@@ -72,14 +59,24 @@
           marker='{"enabled":false,"radius":15}'
           data="{{tsData}}">
         </px-chart-series-bar>
-      </px-chart>
+      </px-chart> -->
+      <px-vis-data-converter
+        data-key="data"
+        original-data="[[tsData]]"
+        id-key="id"
+        name-key="name"
+        chart-data="{{chartData}}"
+        series-config="{{seriesConfig}}">
+      </px-vis-data-converter>
       <px-vis-timeseries hidden$="[[hideLine]]"
           height="300"
           include-all-series
           register-location="top"
           selection-type= "xy"
-          chart-data="{{tsData}}">
+          chart-data="{{chartData}}"
+          series-config="[[seriesConfig]]">
       </px-vis-timeseries>
+      {{jsonify(seriesConfig)}}
     </px-card>
   </template>
 </dom-module>
@@ -92,7 +89,7 @@
         value:{
             "start": "12h-ago",
             "end": "1mi-ago",
-            "tags": []
+            "tags": this.tags
         }
       },
       latestPointBody: {
@@ -121,10 +118,6 @@
       cardTitle: {
         type: String
       },
-      hideChevron: {
-        type: Boolean,
-        value: true
-      },
       cardColor: {
         type: String
       },
@@ -143,20 +136,22 @@
         this._dateRangeChanged();
         this.$.getTimeseries.generateRequest();
       });
-      this.$.dropdown.addEventListener('dropdown_content_value_changed', (e) => {
-        this._tagChange(e.detail.textValue);
-      });
+      // this.$.dropdown.addEventListener('dropdown_content_value_changed', (e) => {
+      //   this._tagChange(e.detail.textValue);
+      // });
       this.$.toggleBtn.addEventListener('change', (e) => {
           this.set('historical', !this.historical);
           this._tagChange(this.tagName);
       });
     },
     _tags: function(){
-      if(this.tags.length > 0){
-        if(this.tags.length > 1){
-          this.hideChevron = false;
-        }
-        this._tagChange(this.tags[0]);
+      if(this.tags.length){
+        this.timeseriesBody.tags = this.tags.map((tag) => {
+          return {
+            name: [ tag ]
+          };
+        });
+        this.$.getTimeseries.generateRequest();
       }
     },
     _tagChange: function(tag){
@@ -217,21 +212,28 @@
       }
     },
     _parseTSData: function(e, details) {
-      let data = details.response.tags[0].results[0].values;
-      let arr = [];
-      this.tagName = details.response.tags[0].name;
-      data.forEach(function(point){
-        point = {
-          x: point[0],
-          y: point[1]
-        };
-        arr.push(point);
-      });
-      this.set('tsData', arr);
 
-      if(!this.historical){
-        this.$.getLatestPoint.generateRequest();
-      }
+      let tags = details.response.tags;
+      this.set('tsData', []);
+      tags.forEach((tag) => {
+        let data = tag.results[0].values;
+        let temp = [];
+        data.forEach((point) => {
+          temp.push([
+            point[0],
+            point[1]
+          ]);
+        });
+        let dataObj = {
+          id: tag.name,
+          name: tag.name,
+          data: temp
+        }
+        this.push('tsData', dataObj);
+      });
+      // if(!this.historical){
+      //   this.$.getLatestPoint.generateRequest();
+      // }
     },
     _dateRangeChanged: function(){
       let start = +new Date(this.$.tsRangePicker.range.from);
@@ -239,6 +241,9 @@
 
       this.timeseriesBody.start = start;
       this.timeseriesBody.end = end;
+    },
+    jsonify: function(str){
+      return JSON.stringify(str);
     }
   });
 </script>
