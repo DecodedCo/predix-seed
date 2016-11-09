@@ -14,7 +14,6 @@ var passport;  // only used if you have configured properties for UAA
 // simple in-memory session is used here. use connect-redis for production!!
 var session = require('express-session');
 var proxy = require('./proxy'); // used when requesting data from real services.
-var herokuProxy = require('express-http-proxy'); // used for Heroku
 // get config settings from local file or VCAPS env var in the cloud
 var config = require('./predix-config');
 // configure passport for authentication with UAA
@@ -81,9 +80,6 @@ if (uaaIsConfigured) {
   		noredirect: true
   	}),
   	proxy.router);
-
-  // access realtime APIs from Heroku instance
-  app.use('/external', herokuProxy(config.externalURL));
 
   //callback route redirects to secure route after login
   app.get('/callback', passport.authenticate('predix', {
