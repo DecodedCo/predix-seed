@@ -69,14 +69,13 @@
         series-config="{{seriesConfig}}">
       </px-vis-data-converter>
       <px-vis-timeseries hidden$="[[hideLine]]"
-          height="300"
+          height="400"
           include-all-series
           register-location="top"
           selection-type= "xy"
-          chart-data="{{chartData}}"
+          chart-data="[[chartData]]"
           series-config="[[seriesConfig]]">
       </px-vis-timeseries>
-      {{jsonify(seriesConfig)}}
     </px-card>
   </template>
 </dom-module>
@@ -148,7 +147,15 @@
       if(this.tags.length){
         this.timeseriesBody.tags = this.tags.map((tag) => {
           return {
-            name: [ tag ]
+            name: [ tag ],
+            aggregations: [
+              {
+                 type:"interpolate",
+                 sampling:{
+                    datapoints: 500
+                 }
+              }
+            ]
           };
         });
         this.$.getTimeseries.generateRequest();
@@ -231,6 +238,7 @@
         }
         this.push('tsData', dataObj);
       });
+
       // if(!this.historical){
       //   this.$.getLatestPoint.generateRequest();
       // }

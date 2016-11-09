@@ -51,10 +51,10 @@
       <latest-data-card id="TotalPowerTag" class="layout__item"
         card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
       <!-- Show realtime demand, and make accessible elsewhere on dashboard -->
-      <!-- <latest-data-card id="windSpeed" class="layout__item"
+      <latest-data-card id="windSpeed" class="layout__item"
         card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card> -->
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card>
     </span>
 
     <!-- Pie chart - requires all power tags -->
@@ -177,7 +177,7 @@
         };
 
         tags.forEach((tag) => {
-          if(tag.includes(deviceName)){
+          if(tag.includes(deviceName) || tag.includes('Demand') || tag.includes('Windspeed')){
             temp.push(tag);
             component.tags.push({
               name: [ tag ]
