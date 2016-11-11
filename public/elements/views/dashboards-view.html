@@ -39,22 +39,21 @@
     <span class="layout">
       <!-- Show realtime temperature -->
       <!-- <latest-data-card id="temperatureTag" class="layout__item"
-        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="humidityTag" class="layout__item"
-        card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="CoalPowerTag" class="layout__item"
-        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{coalPower}}></latest-data-card>
-      <latest-data-card id="GasPowerTag" class="layout__item"
-        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card>
-      <latest-data-card id="WindPowerTag" class="layout__item"
-        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card>
-      <latest-data-card id="TotalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
-      <!-- Show realtime demand, and make accessible elsewhere on dashboard -->
+        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
+      <!-- <latest-data-card id="humidityTag" class="layout__item"
+        card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
+      <!-- <latest-data-card id="CoalPowerTag" class="layout__item"
+        card-title="Coal Power (MW)" tag="CoalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{coalPower}}></latest-data-card> -->
+      <!-- <latest-data-card id="GasPowerTag" class="layout__item"
+        card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card> -->
+      <!-- <latest-data-card id="WindPowerTag" class="layout__item"
+        card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card> -->
+      <!-- <latest-data-card id="TotalPowerTag" class="layout__item"
+        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card> -->
+      <!-- <latest-data-card id="demand" class="layout__item"
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card> -->
       <!-- <latest-data-card id="windSpeed" class="layout__item"
-        card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card> -->
+        card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card> -->
     </span>
 
     <!-- Pie chart - requires all power tags -->
@@ -156,8 +155,10 @@
         var _this = this;
       },
       compareDemandOutput: function(){
-        if(this.demand && this.output) {
-          if(this.demand !== -1 && this.output !== -1 && this.demand > this.output){
+        // check if valid demand and output are being generated
+        if(this.demand >= 0 && this.output >= 0) {
+          // logic to trigger an alert
+          if(this.demand > this.output){
             //create px-alert-message element
             var el = document.createElement("px-alert-message");
             el.type = "important";
@@ -166,7 +167,7 @@
             el.action = "dismiss";
             el.autoDismiss = "5000";
             // Uncomment the following line to show alerts
-            //document.getElementById('alert').appendChild(el);
+            // document.getElementById('alert').appendChild(el);
           }
         }
       },
@@ -203,7 +204,7 @@
             },
             {
               "x": this.windPower,
-              y: 'Wind Power'
+              "y": 'Wind Power'
             },
             {
               "x": this.gasPower,
