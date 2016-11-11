@@ -51,10 +51,10 @@
       <latest-data-card id="TotalPowerTag" class="layout__item"
         card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
       <!-- Show realtime demand, and make accessible elsewhere on dashboard -->
-      <latest-data-card id="windSpeed" class="layout__item"
+      <!-- <latest-data-card id="windSpeed" class="layout__item"
         card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]"></latest-data-card> -->
     </span>
 
     <!-- Pie chart - requires all power tags -->
@@ -62,22 +62,23 @@
         card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card> -->
 
     <!-- Show time series for just one tag, no dropdown -->
-<!--     <time-series-card id="tsSingleTag"
+    <!-- <time-series-card id="tsSingleTag"
         card-title="Time Series Card - Line" tags="[[_setTag('Temperature-xlp-')]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card>
-    <time-series-card id="tsSingleTag"
-        card-title="Time Series Card - Line" tags="[[_setTag('Demand')]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card>
- -->
-    <!-- Show time series for just one tag, no dropdown -->
-<!--     <time-series-card id="tsSingleTag"
-        card-title="Demand - Line" tags="[[_setTag('CoalPower-xlp-')]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card> -->
+    <!-- <time-series-card id="tsDemo"
+        card-title="Time Series Card - Line" tags="[[_createTagsArray('Temperature-xlp-54')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card> -->
 
+    <!-- Show time series for specific tags (any amount), no dropdown -->
+    <time-series-card id="card1"
+        card-title="Time Series Card - Line 1" tags="[[_createTagsArray('Temperature-xlp-54', tagVals.4)]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card>
+
     <!-- Show time series data as a line chart for all tags -->
-    <time-series-card id="tsLineChart"
+    <time-series-card id="allTags"
         card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
+
     <!-- Show time series data as a bar chart for all tags -->
 <!--     <time-series-card id="tsBarChart"
         card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line card-color="[[cardColor]]">
@@ -189,13 +190,8 @@
         };
         this.tagVals = temp;
       },
-      _setTag: function(tag){
-        let temp = [];
-        if(tag === 'Demand'){
-          deviceName = '';
-        }
-        temp.push(tag + deviceName);
-        return temp;
+      _createTagsArray: function(...tags){
+        return tags;
       },
       _setPieData: function(){
 

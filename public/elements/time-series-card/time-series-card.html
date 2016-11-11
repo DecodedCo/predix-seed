@@ -15,10 +15,10 @@
           id="getTimeseries"
           method="POST"
           url="/predix-api/predix-timeseries/v1/datapoints"
-          body="{{timeseriesBody}}"
+          body="[[timeseriesBody]]"
           handle-as="json"
           content-type="application/json"
-          last-response="{{data}}"
+          last-response="[[data]]"
           on-response="_parseTSData"
     ></iron-ajax>
     <!-- Add in for "real time charts" -->
@@ -85,10 +85,10 @@
     properties: {
       timeseriesBody: {
         type:Object,
-        value:{
+        value: {
             "start": "12h-ago",
             "end": "1mi-ago",
-            "tags": this.tags
+            "tags": []
         }
       },
       latestPointBody: {
@@ -125,27 +125,24 @@
         value: true
       }
     },
+    listeners: {
+      'tsRangePicker.px-datetime-range-submitted': '_dateRangeChanged'
+    },
     ready: function ready(){
       let date = new Date();
       this.$.tsRangePicker.range = {
-        "from": new Date(date.getTime() - 43200000).toISOString(), //"2016-01-01T01:00:00.000Z",
+        "from": new Date(date.getTime() - 43200000).toISOString(), // "2016-01-01T01:00:00.000Z",
         "to": new Date(date.getTime()).toISOString()
       };
-      this.$.tsRangePicker.addEventListener('px-datetime-range-submitted', () => {
-        this._dateRangeChanged();
-        this.$.getTimeseries.generateRequest();
-      });
-      // this.$.dropdown.addEventListener('dropdown_content_value_changed', (e) => {
-      //   this._tagChange(e.detail.textValue);
-      // });
+
       this.$.toggleBtn.addEventListener('change', (e) => {
           this.set('historical', !this.historical);
           this._tagChange(this.tagName);
       });
     },
     _tags: function(){
-      if(this.tags.length){
-        this.timeseriesBody.tags = this.tags.map((tag) => {
+      if(typeof this.tags !== 'undefined'){
+        const tsTags = this.tags.map((tag) => {
           return {
             name: [ tag ],
             aggregations: [
@@ -158,71 +155,71 @@
             ]
           };
         });
+        this.set('timeseriesBody.tags', tsTags);
         this.$.getTimeseries.generateRequest();
       }
     },
-    _tagChange: function(tag){
-      this.tagName = tag;
-      if(!this.hideBar && typeof this.$.barChart.chart !== 'undefined'){
-        this.$.barChart.chart.series[0].update({name:this.tagName}, false);
-        this.$.barChart.chart.series[1].update({name:this.tagName}, false);
-        this.$.barChart.chart.redraw();
-      }
-      this.timeseriesBody.tags = [
-        {
-          "name": [ tag ],
-          "aggregations": [{
-            "type": "avg",
-            "sampling": {
-              "unit": "s",
-              "value": "45"
-            }
-          }]
-        }
-      ];
-      this.latestPointBody.tags = [
-        {
-          "name": [ tag ]
-        }
-      ];
-      this.$.getTimeseries.generateRequest();
-    },
+    // _tagChange: function(tag){
+    //   this.tagName = tag;
+    //   if(!this.hideBar && typeof this.$.barChart.chart !== 'undefined'){
+    //     this.$.barChart.chart.series[0].update({name:this.tagName}, false);
+    //     this.$.barChart.chart.series[1].update({name:this.tagName}, false);
+    //     this.$.barChart.chart.redraw();
+    //   }
+    //   this.timeseriesBody.tags = [
+    //     {
+    //       "name": [ tag ],
+    //       "aggregations": [{
+    //         "type": "avg",
+    //         "sampling": {
+    //           "unit": "s",
+    //           "value": "45"
+    //         }
+    //       }]
+    //     }
+    //   ];
+    //   this.latestPointBody.tags = [
+    //     {
+    //       "name": [ tag ]
+    //     }
+    //   ];
+    //   this.$.getTimeseries.generateRequest();
+    // },
     _updateData: function(){
       this.async(function() {
         this.$.getLatestPoint.generateRequest();
       }, 10000);
     },
-    _onResponse: function(e, details) {
-      if(!this.historical){
-        this._updateData();
-
-        let latestPoint = details.response.tags[0].results[0].values[0];
-        latestPoint = {
-          x: latestPoint[0],
-          y: latestPoint[1]
-        }
-        if(this.tsData.length > 0){
-          if(latestPoint.x !== this.tsData[this.tsData.length-1].x){
-            if(this.tsData.length > 500){ //limit the chart to 500 points?
-              this.tsData.shift();
-            }
-            this.push('tsData', latestPoint);
-            if(!this.hideBar){
-              this.$.barChart.chart.series[0].addPoint(latestPoint, true, true);
-              this.$.barChart.chart.series[1].addPoint(latestPoint, true, true);
-            }
-          }
-        }
-        else {
-          this.push('tsData', latestPoint);
-        }
-      }
-    },
+    // _onResponse: function(e, details) {
+    //   if(!this.historical){
+    //     this._updateData();
+    //
+    //     let latestPoint = details.response.tags[0].results[0].values[0];
+    //     latestPoint = {
+    //       x: latestPoint[0],
+    //       y: latestPoint[1]
+    //     }
+    //     if(this.tsData.length > 0){
+    //       if(latestPoint.x !== this.tsData[this.tsData.length-1].x){
+    //         if(this.tsData.length > 500){ //limit the chart to 500 points?
+    //           this.tsData.shift();
+    //         }
+    //         this.push('tsData', latestPoint);
+    //         if(!this.hideBar){
+    //           this.$.barChart.chart.series[0].addPoint(latestPoint, true, true);
+    //           this.$.barChart.chart.series[1].addPoint(latestPoint, true, true);
+    //         }
+    //       }
+    //     }
+    //     else {
+    //       this.push('tsData', latestPoint);
+    //     }
+    //   }
+    // },
     _parseTSData: function(e, details) {
-
-      let tags = details.response.tags;
+      let _tags = details.response.tags;
       this.set('tsData', []);
-      tags.forEach((tag) => {
+      _tags.forEach((tag) => {
         let data = tag.results[0].values;
         let temp = [];
         data.forEach((point) => {
@@ -244,11 +241,19 @@
       // }
     },
     _dateRangeChanged: function(){
-      let start = +new Date(this.$.tsRangePicker.range.from);
-      let end = +new Date(this.$.tsRangePicker.range.to);
+      if(typeof this.timeseriesBody !== 'undefined'){
+        let start = +new Date(this.$.tsRangePicker.range.from);
+        let end = +new Date(this.$.tsRangePicker.range.to);
 
-      this.timeseriesBody.start = start;
-      this.timeseriesBody.end = end;
+        // TODO: Why does this work?! why is there scope bleed
+        this._tags();
+        if(this.tags && this.timeseriesBody.tags && this.timeseriesBody.tags[0].name[0] != this.tags[0]) {
+          throw new Error(`${this.timeseriesBody.tags[0].name[0]} != ${this.tags[0]}`);
+        }
+        this.timeseriesBody.start = start;
+        this.timeseriesBody.end = end;
+        this.$.getTimeseries.generateRequest();
+      }
     },
     jsonify: function(str){
       return JSON.stringify(str);
