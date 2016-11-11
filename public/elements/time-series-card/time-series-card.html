@@ -34,9 +34,6 @@
     ></iron-ajax> -->
 
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
-      <div style="padding:10px;display:inline-block;">
-         <paper-toggle-button id="toggleBtn" checked> Historical Data </paper-toggle-button>
-      </div>
       <div style="margin-bottom:1em; width:100%">
         <px-rangepicker
             style="width: 60%;display:inline-block;"
@@ -49,6 +46,9 @@
             hidden$="[[!historical]]"
             >
         </px-rangepicker>
+        <div style="width:35%;display:inline-block;">
+           <paper-toggle-button id="toggleBtn" checked style="float:right;"> Historical Data </paper-toggle-button>
+        </div>
         <div style="width:60%; display:inline-block;" hidden$="[[historical]]"></div>
       </div>
       <!-- <px-chart hidden$="[[hideBar]]" id="barChart">
