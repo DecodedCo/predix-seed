@@ -60,15 +60,11 @@
     <!-- <pie-chart-card id="pieChart"
         card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card> -->
 
-    <!-- Show time series for just one tag, no dropdown -->
-    <!-- <time-series-card id="tsSingleTag"
-        card-title="Time Series Card - Line" tags="[[_setTag('Temperature-xlp-')]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card> -->
-    <!-- <time-series-card id="tsDemo"
-        card-title="Time Series Card - Line" tags="[[_createTagsArray('Temperature-xlp-54')]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card> -->
-
     <!-- Show time series for specific tags (any amount), no dropdown -->
+    <time-series-card id="card0"
+        card-title="Time Series Card - One tag" tags="[[_createTagsArray(tagVals.6)]]" hide-bar card-color="[[cardColor]]">
+    </time-series-card>
+
     <time-series-card id="card1"
         card-title="Time Series Card - Line 1" tags="[[_createTagsArray('Temperature-xlp-54', tagVals.4)]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>

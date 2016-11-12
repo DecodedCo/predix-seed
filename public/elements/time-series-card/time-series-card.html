@@ -22,7 +22,7 @@
           on-response="_parseTSData"
     ></iron-ajax>
     <!-- Add in for "real time charts" -->
-    <!-- <iron-ajax
+    <iron-ajax
           id="getLatestPoint"
           method="POST"
           url="/predix-api/predix-timeseries/v1/datapoints/latest"
@@ -31,7 +31,7 @@
           content-type="application/json"
           last-response="{{latest}}"
           on-response="_onResponse"
-    ></iron-ajax> -->
+    ></iron-ajax>
 
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div style="margin-bottom:1em; width:100%">
@@ -130,10 +130,14 @@
       return JSON.stringify(str);
     },
     ready: function ready(){
-      let date = new Date();
+      const date = new Date();
+      const initDates = {
+         start: new Date(date.getTime() - 43200000).toISOString(), // "2016-01-01T01:00:00.000Z",
+         end: new Date(date.getTime()).toISOString()
+       }
       this.$.tsRangePicker.range = {
-        "from": new Date(date.getTime() - 43200000).toISOString(), // "2016-01-01T01:00:00.000Z",
-        "to": new Date(date.getTime()).toISOString()
+        "from": initDates.start,
+        "to": initDates.end
       };
 
       this.$.tsRangePicker.addEventListener('px-datetime-range-submitted', (e) => {
@@ -141,8 +145,13 @@
       });
 
       this.$.toggleBtn.addEventListener('change', (e) => {
+          this.$.tsRangePicker.range = {
+            "from": initDates.start,
+            "to": initDates.end
+          };
+          this._queryTimeseries();
           this.set('historical', !this.historical);
-          this._toggleDataType();
+          this._queryLatestPoint();
       });
     },
     _setTags: function(){
@@ -173,69 +182,79 @@
         tsTags
       }
     },
-    _toggleDataType: function(){
-      if(!this.hideBar && typeof this.$.barChart.chart !== 'undefined'){
-        this.$.barChart.chart.series[0].update({name:this.tagName}, false);
-        this.$.barChart.chart.series[1].update({name:this.tagName}, false);
-        this.$.barChart.chart.redraw();
-      }
-      this._tags();
-      this.$.getTimeseries.generateRequest();
-    },
     _pollLatestData: function(){
       this.async(function() {
-        this.$.getLatestPoint.generateRequest();
+        this._queryLatestPoint();
       }, 10000);
     },
     _onResponse: function(e, details) {
-      this._parseTSData(e, details);
-      //   let _tags = details.response.tags;
-      //   _tags.forEach()
-      //   let latestPoints = results[0].values[0];
-      //   latestPoint = {
-      //     x: latestPoint[0],
-      //     y: latestPoint[1]
-      //   }
-      //   if(this.tsData.length > 0){
-      //     if(latestPoint.x !== this.tsData[this.tsData.length-1].x){
-      //       if(this.tsData.length > 500){ //limit the chart to 500 points?
-      //         this.tsData.shift();
-      //       }
-      //       this.push('tsData', latestPoint);
-      //       if(!this.hideBar){
-      //         this.$.barChart.chart.series[0].addPoint(latestPoint, true, true);
-      //         this.$.barChart.chart.series[1].addPoint(latestPoint, true, true);
-      //       }
-      //     }
-      //   }
-      //   else {
-      //     this.push('tsData', latestPoint);
-      //   }
-      // }
-    },
-    _parseTSData: function(e, details) {
       let _tags = details.response.tags;
-      this.set('tsData', []);
+      let data = Object.create(this.tsData);
       _tags.forEach((tag) => {
-        let data = tag.results[0].values;
+        let dataVals = tag.results[0].values;
         let temp = [];
-        data.forEach((point) => {
+        dataVals.forEach((point) => {
           temp.push([
             point[0],
             point[1]
           ]);
         });
+        if (!this.historical) {
+          let tsInfo = data.find((item) => {
+            return item.name === tag.name;
+          });
+          tsInfo  = this._validateData(temp, tsInfo); //this should change data vals
+        }
+      });
+
+      this.set('tsData', []);
+      this.set('tsData', data);
+      if(!this.historical){
+        this._pollLatestData();
+      }
+
+    },
+    _validateData: function(data, tag) {
+        let x = data[0][0];
+        if(data.length){
+          if(x !== tag.data[tag.data.length-1][0]){ // make sure we are only shifting for new values
+            if(tag.data.length > 500){
+              let diff = 500 - tag.data.length; // want negative for splice!
+              tag.data.splice(diff)
+              tag.data.shift();
+            }
+            tag.data.push([data[0][0], data[0][1]]);
+          }
+          return tag.data;
+        }
+
+        return data;
+    },
+    _parseTSData: function(e, details) {
+      let _tags = details.response.tags;
+      let data = Object.create(this.tsData);
+      _tags.forEach((tag) => {
+        let dataVals = tag.results[0].values;
+        let temp = [];
+        dataVals.forEach((point) => {
+          temp.push([
+            point[0],
+            point[1]
+          ]);
+        });
+        if (!this.historical) {
+          temp = this._validateData(temp, tag);
+        }
         let dataObj = {
           id: tag.name,
           name: tag.name,
           data: temp
         }
-        this.push('tsData', dataObj);
+        data.push(dataObj);
       });
 
-      if(!this.historical){
-        this._queryLatestPoint();
-      }
+      this.set('tsData', []);
+      this.set('tsData', data);
     },
     _getDate: function() {
       if(typeof this.$.tsRangePicker.range !== 'undefined'){
