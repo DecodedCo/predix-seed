@@ -56,7 +56,8 @@
     "px-dropdown": "^0.12.2",
     "px-alert-message": "^0.7.0",
     "paper-toggle-button": "^1.2.1",
-    "px-vis-pie-chart": "^0.2.0"
+    "px-vis-pie-chart": "^0.2.0",
+    "px-layout-design": "^0.3.19"
   },
   "resolutions": {
     "polymer": "^1.5.0",
