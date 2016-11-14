@@ -19,11 +19,14 @@
     ></iron-ajax>
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div class="layout">
-        <div class="layout__item">[[tag]] <br>
+        <div class="layout__item" hidden$="[[isStatic]]">[[tag]] <br>
           <h2 hidden$="[[empty]]" style="color: [[textColor]]"> [[latestTSPoint]]</h2>
           <h2 hidden$="[[!empty]]"> N/A</h2>
           <div hidden$="[[empty]]">* [[time]]</div>
           <div hidden$="[[!empty]]">Data not available</div>
+        </div>
+        <div class="layout__item" hidden$="[[!isStatic]]">[[valueName]] <br>
+          <h2 style="color: [[textColor]]"> [[dataValue]]</h2>
         </div>
       </div>
     </px-card>
@@ -47,7 +50,16 @@
         type: Array,
         value: []
       },
-      cartTitle: {
+      dataValue: {  // used INSTEAD of the timeseries data, don't have both
+        type: Number
+      },
+      valueName: {
+        type: String // used INSTEAD of the tag name
+      },
+      isStatic: {
+        type: Boolean // used to indicate between static/calculated or polling
+      },
+      cardTitle: {
         type: String
       },
       empty: {
