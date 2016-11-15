@@ -35,9 +35,10 @@
 
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
       <div style="margin-bottom:1em; width:100%">
+        <span hidden$="[[!singleTag]]">
         <div style="width:35%;display:inline-block;">
-           <paper-toggle-button id="toggleBtn" checked style="float:left;"> Historical Data </paper-toggle-button>
-        </div>
+           <paper-toggle-button  id="toggleBtn" checked style="float:left;"> Historical Data </paper-toggle-button>
+        </div></span>
         <span hidden$="[[!historical]]">
           <px-rangepicker
               style="display:inline-block;float:right;"
@@ -135,6 +136,11 @@
             yMin: 'dynamic',
             yMax: 'dynamic'
         })
+      },
+      singleTag: {
+        type: Boolean,
+        notify: true,
+        value: false
       }
     },
     //// TODO remove this - Just for debug
@@ -187,8 +193,8 @@
             name: [ tag ]
           }
         });
+        this.set('singleTag', tsTags.length === 1)
       }
-
       return {
         lpTags,
         tsTags
