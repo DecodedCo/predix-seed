@@ -59,8 +59,8 @@
         card-title="Demand vs. Power" data-value="[[difference]]" value-name="Generated Power Needed" is-static card-color="[[cardColor]]"></latest-data-card>
     </span>
     <aggregation-card id="average" class="layout__item"
-      card-title="Average Temperature" description="Average temperature over last 24 hours" tag-name="TotalPower-xlp-[[deviceName]]"
-      aggregation-type="avg" card-color="[[cardColor]]"></aggregation-card>
+      card-title="Average Temperature" description="Average temperature over last 10 minutes" tag-name="TotalPower-xlp-[[deviceName]]"
+      aggregation-type="avg" card-color="[[cardColor]]" duration="1h"></aggregation-card>
     <!-- Pie chart - requires all power tags -->
     <!-- <pie-chart-card id="pieChart"
         card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card> -->

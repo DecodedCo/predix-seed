@@ -42,6 +42,10 @@
         type: String,
         observer: '_getAggregatedValue'
       },
+      duration: {
+        type: String,
+        value: '10mi'
+      },
       description: {
         type: String
       },
@@ -74,8 +78,8 @@
     _getAggregatedValue: function() {
       if(this.aggregationType && this.tagName){
         this.$.timeseriesAggregation.body = {
-            start: "12h-ago",
-            end: "1mi-ago",
+            start: `${this.duration}-ago`,  // default to 10 min if not specified
+            end: "1ms-ago",
             tags: [{
                 name: this.tagName,
                 aggregations: [{
