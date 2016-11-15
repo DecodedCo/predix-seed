@@ -1,0 +1,103 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/px-card/px-card.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+
+<!-- <script type="text/javascript" src="/bower_components/px/dist/px.min.js"></script> -->
+
+<dom-module id="aggregation-card">
+  <template>
+
+    <!-- apply imported style module -->
+    <iron-ajax
+          id="timeseriesAggregation"
+          method="POST"
+          url="/predix-api/predix-timeseries/v1/datapoints"
+          handle-as="json"
+          content-type="application/json"
+          on-response="_aggregationResponse"
+    ></iron-ajax>
+    <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
+      <div class="layout">
+        <div class="layout__item">
+          <div>[[description]]</div>
+          [[tagName]]<br>
+          <h2 hidden$="[[empty]]" style="color: [[textColor]]"> [[dataValue]]</h2>
+          <h2 hidden$="[[!empty]]"> N/A</h2>
+          <div hidden$="[[!empty]]">Data not available</div>
+        </div>
+      </div>
+    </px-card>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'aggregation-card',
+    properties: {
+      aggregationType: {
+        type: String,
+        observer: '_getAggregatedValue'
+      },
+      tagName: {
+        type: String,
+        observer: '_getAggregatedValue'
+      },
+      description: {
+        type: String
+      },
+      cardTitle: {
+        type: String
+      },
+      empty: {
+        type: Boolean,
+        value: true
+      },
+      numPoints: {
+        type: Number
+      },
+      dataValue: {
+        type: Number
+      },
+      cardColor: {
+        type: String
+      },
+      textColor: {
+        type: String,
+        value: 'black'
+      }
+    },
+    _getAggregatedValue: function() {
+      if(this.aggregationType && this.tagName){
+        this.$.timeseriesAggregation.body = {
+            start: "12h-ago",
+            end: "1mi-ago",
+            tags: [{
+                name: this.tagName,
+                aggregations: [{
+                  type: this.aggregationType,
+                  sampling: {
+                    datapoints: 1
+                  }
+                }]
+              }]
+        };
+        this.$.timeseriesAggregation.generateRequest();
+      }
+    },
+    _aggregationResponse: function(e, details) {
+      const tagName = details.response.tags[0].name;
+      if(details.response.tags[0].results[0].values.length > 0){
+        const data = Math.round(details.response.tags[0].results[0].values[0][1]); // get the one data point value
+        const points = details.response.tags[0].stats.rawCount;  // agg over this many points
+        this.empty = !this._hasValue(data);
+        this.set('numPoints', points);
+        this.set('dataValue', data);
+      }
+    },
+    _hasValue: function(data){
+      if(typeof data !== 'undefined'){
+        return true;
+      }
+      return false;
+    }
+  });
+</script>

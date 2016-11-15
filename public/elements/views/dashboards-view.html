@@ -5,6 +5,7 @@
 <link rel="import" href="/elements/time-series-card/time-series-card.html">
 <link rel="import" href="/elements/values-card/values-card.html">
 <link rel="import" href="/elements/latest-tag-data/latest-tag-data.html">
+<link rel="import" href="/elements/aggregation-card/aggregation-card.html">
 <link rel="import" href="/elements/pie-chart-card/pie-chart-card.html">
 <link rel="import" href="/bower_components/px-alert-message/px-alert-message.html">
 <style media="screen">
@@ -57,7 +58,9 @@
       <latest-data-card id="calculated" class="layout__item"
         card-title="Demand vs. Power" data-value="[[difference]]" value-name="Generated Power Needed" is-static card-color="[[cardColor]]"></latest-data-card>
     </span>
-
+    <aggregation-card id="average" class="layout__item"
+      card-title="Average Temperature" description="Average temperature over last 24 hours" tag-name="TotalPower-xlp-[[deviceName]]"
+      aggregation-type="avg" card-color="[[cardColor]]"></aggregation-card>
     <!-- Pie chart - requires all power tags -->
     <!-- <pie-chart-card id="pieChart"
         card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card> -->
