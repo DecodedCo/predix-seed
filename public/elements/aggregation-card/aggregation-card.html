@@ -24,6 +24,7 @@
           <h2 hidden$="[[empty]]" style="color: [[textColor]]"> [[dataValue]]</h2>
           <h2 hidden$="[[!empty]]"> N/A</h2>
           <div hidden$="[[!empty]]">Data not available</div>
+          <div>Aggregation over [[numPoints]] points</div>
         </div>
       </div>
     </px-card>
@@ -65,6 +66,11 @@
         value: 'black'
       }
     },
+    _pollLatestData: function(){
+      this.async(function() {
+        this.$.timeseriesAggregation.generateRequest();
+      }, 10000);
+    },
     _getAggregatedValue: function() {
       if(this.aggregationType && this.tagName){
         this.$.timeseriesAggregation.body = {
@@ -92,6 +98,7 @@
         this.set('numPoints', points);
         this.set('dataValue', data);
       }
+      this._pollLatestData();
     },
     _hasValue: function(data){
       if(typeof data !== 'undefined'){
