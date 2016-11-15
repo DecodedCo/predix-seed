@@ -38,10 +38,8 @@
     <!-- Show latest value on one card per tag -->
     <span class="layout">
       <!-- Show realtime temperature -->
-      <latest-data-card id="temperatureTag" class="layout__item"
-        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="temperatureTag" class="layout__item"
-          card-title="Gearbox Temperature (&deg;C)" data-value="10" value-name="Testing" is-static card-color="[[cardColor]]"></latest-data-card>
+      <!-- <latest-data-card id="temperatureTag" class="layout__item"
+        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
       <!-- <latest-data-card id="humidityTag" class="layout__item"
         card-title="Gearbox Humidity (%)" tag="Humidity-xlp-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
       <!-- <latest-data-card id="CoalPowerTag" class="layout__item"
@@ -50,12 +48,14 @@
         card-title="Gas Power (MW)" tag="GasPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card> -->
       <!-- <latest-data-card id="WindPowerTag" class="layout__item"
         card-title="Wind Power (MW)" tag="WindPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card> -->
-      <!-- <latest-data-card id="TotalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card> -->
-      <!-- <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card> -->
-      <!-- <latest-data-card id="windSpeed" class="layout__item"
-        card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card> -->
+        <!-- <latest-data-card id="windSpeed" class="layout__item"
+          card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card> -->
+      <latest-data-card id="TotalPowerTag" class="layout__item"
+        card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card>
+      <latest-data-card id="demand" class="layout__item"
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card>
+      <latest-data-card id="calculated" class="layout__item"
+        card-title="Demand vs. Power" data-value="[[difference]]" value-name="Generated Power Needed" is-static card-color="[[cardColor]]"></latest-data-card>
     </span>
 
     <!-- Pie chart - requires all power tags -->
@@ -92,10 +92,6 @@
       is: 'dashboards-view',
 
       properties: {
-        tags: {
-          type: Object,
-          value: {}
-        },
         tagVals: {
           type: Array
         },
@@ -111,13 +107,13 @@
           type: Number,
           value: -1,
           notify: true,
-          observer: "compareDemandOutput"
+          observer: '_demandHandler'
         },
         output: {
           type: Number,
           value: -1,
           notify: true,
-          observer: "compareDemandOutput"
+          observer: '_outputHandler'
         },
         coalPower: {
           type: Number,
@@ -139,18 +135,20 @@
           type: Array
         },
         thresholds: {
-          type: Object,
-          // value: {
-          //   'demand': {
-          //      upper: 100,
-          //      lower: 0,
-          //      color: 'red'
-          //   }
-          // }
+          type: Object,  // Object of threshold objects
+          value: () => ({
+              'demand': [   // each "set" of thresholds has a name and then an array of threshold info for multiple cases
+                {
+                  lower: 0,
+                  color: 'red'
+                },
+                {
+                  upper: 100,
+                  color: 'blue'
+                }
+              ]
+          })
         }
-      },
-      ready: function ready() {
-        var _this = this;
       },
       compareDemandOutput: function(){
         // check if valid demand and output are being generated
@@ -172,22 +170,13 @@
       _tagResponse: function(e, details){
         let tags = details.response.results;
         let temp = [];
-        let component = {
-          tags: []
-        };
 
         tags.forEach((tag) => {
           if(tag.includes(deviceName) || tag.includes('Demand') || tag.includes('Windspeed')){
             temp.push(tag);
-            component.tags.push({
-              name: [ tag ]
-            });
-          }
+          };
         });
-        this.tags = {
-          "tags": component.tags
-        };
-        this.tagVals = temp;
+        this.set('tagVals', temp);
       },
       _createTagsArray: function(...tags){
         return tags;
@@ -210,6 +199,22 @@
             }
           ];
         }
+      },
+      _calculateDifference: function(var1, var2, returnVar) {
+        if(this[var1] && this[var2]){
+          //return this[var1] - this[var2];
+          this.set(returnVar, this[var1] - this[var2]);
+        } else {
+          this.set(returnVar, 'NA');
+        }
+      },
+      _demandHandler: function() {
+        this._calculateDifference('demand', 'output', 'difference');
+        // put anything else here to happen when demand value is changed!
+      },
+      _outputHandler: function() {
+        this._calculateDifference('demand', 'output', 'difference');
+        // put anything else here to happen when output value is changed!
       }
     });
   </script>
