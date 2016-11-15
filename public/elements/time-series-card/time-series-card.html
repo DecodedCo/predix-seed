@@ -74,7 +74,8 @@
           register-location="top"
           selection-type= "xy"
           chart-data="[[chartData]]"
-          series-config="[[seriesConfig]]">
+          series-config="[[seriesConfig]]"
+          default-series-config="[[defaultSeriesConfig]]">
       </px-vis-timeseries>
     </px-card>
   </template>
@@ -123,6 +124,17 @@
       historical: {
         type: Boolean,
         value: true
+      },
+      defaultSeriesConfig: {
+        type: Object,
+        value: () => ({
+            type: 'line',
+            x: 'x',
+            xMin: 'dynamic',
+            xMax: 'dynamic',
+            yMin: 'dynamic',
+            yMax: 'dynamic'
+        })
       }
     },
     //// TODO remove this - Just for debug
