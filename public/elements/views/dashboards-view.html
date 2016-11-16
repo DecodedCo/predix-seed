@@ -178,7 +178,7 @@
         let temp = [];
 
         tags.forEach((tag) => {
-          if(tag.includes(deviceName) || tag.includes('Demand') || tag.includes('Windspeed')){
+          if(tag.includes(deviceName) || tag == 'Demand' || tag == 'WindSpeed'){
             temp.push(tag);
           };
         });
