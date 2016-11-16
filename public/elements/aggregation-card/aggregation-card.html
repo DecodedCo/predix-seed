@@ -96,7 +96,7 @@
     _aggregationResponse: function(e, details) {
       const tagName = details.response.tags[0].name;
       if(details.response.tags[0].results[0].values.length > 0){
-        const data = Math.round(details.response.tags[0].results[0].values[0][1]); // get the one data point value
+        const data = Math.round(details.response.tags[0].results[0].values[0][1]).toFixed(2); // get the one data point value
         const points = details.response.tags[0].stats.rawCount;  // agg over this many points
         this.empty = !this._hasValue(data);
         this.set('numPoints', points);
