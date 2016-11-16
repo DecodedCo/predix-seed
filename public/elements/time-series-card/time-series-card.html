@@ -263,9 +263,12 @@
         if (!this.historical) {
           temp = this._validateData(temp, tag);
         }
+        // take away the '-xlp-54' from the legend
+        let n = tag.name.indexOf('-');
+        let name = tag.name.substring(0, n != -1 ? n : tag.name.length);
         let dataObj = {
           id: tag.name,
-          name: tag.name,
+          name: name,
           data: temp
         }
         data.push(dataObj);
