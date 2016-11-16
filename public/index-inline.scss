@@ -62,3 +62,13 @@ body.loading #splash {
 .layout__item:last-child {
   margin-right: auto;
 }
+
+// Alert CSS
+
+.alert-message-container {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1020;
+  height: 100vh;
+}

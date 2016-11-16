@@ -8,15 +8,6 @@
 <link rel="import" href="/elements/aggregation-card/aggregation-card.html">
 <link rel="import" href="/elements/pie-chart-card/pie-chart-card.html">
 <link rel="import" href="/bower_components/px-alert-message/px-alert-message.html">
-<style media="screen">
-  .alert-message-container {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1020;
-    height: 100vh;
-  }
-</style>
 
 <dom-module id="dashboards-view">
   <template>
@@ -38,7 +29,6 @@
 
     <!-- Show latest value on one card per tag -->
     <span class="layout">
-      <!-- Show realtime temperature -->
       <latest-data-card id="temperatureTag" class="layout__item"
         card-title="Gearbox Temperature (&deg;C)" tag="Temperature-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="humidityTag" class="layout__item"
@@ -52,9 +42,9 @@
         <latest-data-card id="windSpeed" class="layout__item"
           card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="TotalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card>
+        card-title="Total Power (MW)" tag="TotalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}} threshold="[[thresholds.output]]"></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}} threshold="[[thresholds.demand]]"></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value="{{demand}}"></latest-data-card>
       <latest-data-card id="calculated" class="layout__item"
         card-title="Demand vs. Power" data-value="[[difference]]" value-name="Generated Power Needed" is-static card-color="[[cardColor]]"></latest-data-card>
     </span>
@@ -63,28 +53,18 @@
       card-title="Average Temperature" description="Average temperature over last hour" tag-name="Temperature-[[deviceName]]"
       aggregation-type="avg" card-color="[[cardColor]]" duration="1h"></aggregation-card>
     <!-- Pie chart - requires all power tags -->
-    <!-- <pie-chart-card id="pieChart"
-        card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card> -->
+    <pie-chart-card id="pieChart"
+        card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card>
 
-    <!-- Show time series for specific tags (any amount), no dropdown -->
+    <!-- Time Series plot for a single tag -->
     <time-series-card id="card0"
-        card-title="Time Series Card - One tag" tags="[[_createTagsArray(tagVals.6)]]" hide-bar card-color="[[cardColor]]">
+        card-title="Time Series Card - One tag" tags="[[_createTagsArray('Demand')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
-
+    <!-- Time Series plot for multiple tags (historic only) -->
     <time-series-card id="card1"
-        card-title="Time Series Card - Line 1" tags="[[_createTagsArray('Temperature-xlp-54', tagVals.4)]]" hide-bar card-color="[[cardColor]]">
+        card-title="Time Series Card - Multiple tags" tags="[[_createTagsArray('Demand','WindSpeed','Temperature')]]" hide-bar card-color="[[cardColor]]">
     </time-series-card>
 
-    <!-- Show time series data as a line chart for all tags -->
-    <time-series-card id="allTags"
-        card-title="Time Series Card - Line" tags="[[tagVals]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card>
-
-    <!-- Show time series data as a bar chart for all tags -->
-<!--     <time-series-card id="tsBarChart"
-        card-title="Time Series Card - Bar" tags="[[tagVals]]" hide-line card-color="[[cardColor]]">
-    </time-series-card>
- -->
   </template>
   <script>
 
@@ -141,23 +121,23 @@
         thresholds: {
           type: Object,  // Object of threshold objects
           value: () => ({
-              'demand': [   // each "set" of thresholds has a name and then an array of threshold info for multiple cases
+              'output': [   // each "set" of thresholds has a name and then an array of threshold info for multiple cases
                 {
                   upper: 800,
-                  lower: 0,
-                  color: 'red',
+                  lower: 400,
+                  color: '#faa43a',
                   apply: 'card'
                 },
                 {
-                  upper: 800,
-                  color: 'blue',
+                  upper: 1,
+                  color: 'red',
                   apply: 'text'
                 }
               ]
           })
         }
       },
-      compareDemandOutput: function(){
+      _compareDemandOutput: function(){
         // check if valid demand and output are being generated
         if(this.demand >= 0 && this.output >= 0) {
           // logic to trigger an alert
@@ -170,7 +150,7 @@
             el.action = "dismiss";
             el.autoDismiss = "5000";
             // Uncomment the following line to show alerts
-            // document.getElementById('alert').appendChild(el);
+            //document.getElementById('alert').appendChild(el);
           }
         }
       },
@@ -185,7 +165,13 @@
         });
         this.set('tagVals', temp);
       },
-      _createTagsArray: function(...tags){
+      _createTagsArray: function(...tags){ 
+        tags.forEach((tag,index) => {
+          if (tag !== 'Demand' && tag !== 'WindSpeed') {
+            tags[index] = tag + '-' + deviceName;
+            return tag;
+          }
+        });
         return tags;
       },
       _setPieData: function(){
@@ -193,15 +179,15 @@
         if(this.coalPower > -1 && this.gasPower > -1 && this.windPower > -1){
           this.pieData = [
             {
-              "x": this.coalPower,
+              "x": Math.round(this.coalPower),
               "y": 'Coal Power'
             },
             {
-              "x": this.windPower,
+              "x": Math.round(this.windPower),
               "y": 'Wind Power'
             },
             {
-              "x": this.gasPower,
+              "x": Math.round(this.gasPower),
               "y": 'Gas Power'
             }
           ];
@@ -221,6 +207,7 @@
       },
       _outputHandler: function() {
         this._calculateDifference('demand', 'output', 'difference');
+        this._compareDemandOutput();
         // put anything else here to happen when output value is changed!
       }
     });
