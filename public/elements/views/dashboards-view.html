@@ -54,7 +54,7 @@
       <latest-data-card id="TotalPowerTag" class="layout__item"
         card-title="Total Power (MW)" tag="TotalPower-xlp-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}}></latest-data-card>
+        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value={{demand}} threshold="[[thresholds.demand]]"></latest-data-card>
       <latest-data-card id="calculated" class="layout__item"
         card-title="Demand vs. Power" data-value="[[difference]]" value-name="Generated Power Needed" is-static card-color="[[cardColor]]"></latest-data-card>
     </span>
@@ -142,12 +142,15 @@
           value: () => ({
               'demand': [   // each "set" of thresholds has a name and then an array of threshold info for multiple cases
                 {
+                  upper: 800,
                   lower: 0,
-                  color: 'red'
+                  color: 'red',
+                  apply: 'card'
                 },
                 {
-                  upper: 100,
-                  color: 'blue'
+                  upper: 800,
+                  color: 'blue',
+                  apply: 'text'
                 }
               ]
           })

@@ -33,6 +33,10 @@
   </template>
 </dom-module>
 <script>
+  var colors = {
+    text: 'black',
+    card: 'white'
+  };
   Polymer({
     is: 'latest-data-card',
     properties: {
@@ -77,18 +81,17 @@
         notify: true
       },
       threshold: {
-        type: Object
-        /// needs object with upper, lower, color
-        // {
-        //   upper: 100,
-        //   lower: 0,
-        //   color: red
-        // }
+        type: Array,
+        value: () => []
       },
       textColor: {
         type: String,
         value: 'black'
       }
+    },
+    ready: function ready() {
+      colors.card = this.cardColor;
+      colors.text = this.textColor;
     },
     _tagChanged: function (){
       if(this.tag){
@@ -107,6 +110,19 @@
         this.$.stuff.generateRequest();
       }, 3000);
     },
+    _setThresholds: function() {
+      if(typeof this.threshold !== 'undefined') {
+        this.threshold.forEach(constraint => {
+          let upper = constraint.upper || Number.MAX_VALUE;
+          let lower = constraint.lower || Number.MIN_VALUE;
+          if(this.latestTSPoint < upper && this.latestTSPoint > lower){
+              this.set(`${constraint.apply}Color`, constraint.color);
+          } else {
+            this.set(`${constraint.apply}Color`, colors[constraint.apply]);
+          }
+        });
+      }
+    },
     _onResponse: function(e, details) {
       this._updateData();
       this.data = details.response.tags;
@@ -114,14 +130,8 @@
         this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
         this.empty = !this._hasValue();
         this.time = "As of " + this._formatTime().slice(4,24);
-        if(typeof this.threshold !== 'undefined'){
-          if(this.latestTSPoint > this.threshold.upper || this.latestTSPoint < this.threshold.lower){
-            this.set('textColor', this.threshold.color);
-          }
-          else{
-            this.set('textColor', 'black');
-          }
-        }
+        this._setThresholds();
+
         if(this.boundValue){
           this.set('boundValue', this.latestTSPoint);
         }
