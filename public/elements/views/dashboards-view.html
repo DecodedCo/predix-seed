@@ -31,45 +31,36 @@
     <span class="layout">
       <latest-data-card id="temperatureTag" class="layout__item"
         card-title="Gearbox Temperature (&deg;C)" tag="Temperature-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="humidityTag" class="layout__item"
-        card-title="Gearbox Humidity (%)" tag="Humidity-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="CoalPowerTag" class="layout__item"
-        card-title="Coal Power (MW)" tag="CoalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{coalPower}}></latest-data-card>
-      <latest-data-card id="GasPowerTag" class="layout__item"
-        card-title="Gas Power (MW)" tag="GasPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card>
-      <latest-data-card id="WindPowerTag" class="layout__item"
-        card-title="Wind Power (MW)" tag="WindPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card>
-        <latest-data-card id="windSpeed" class="layout__item"
-          card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
-      <latest-data-card id="TotalPowerTag" class="layout__item"
-        card-title="Total Power (MW)" tag="TotalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}} threshold="[[thresholds.output]]"></latest-data-card>
-      <latest-data-card id="demand" class="layout__item"
-        card-title="Demand (MW)" tag="Demand" card-color="[[cardColor]]" bound-value="{{demand}}"></latest-data-card>
-      <latest-data-card id="calculated" class="layout__item"
-        card-title="Demand vs. Power" data-value="[[difference]]" value-name="Generated Power Needed" is-static card-color="[[cardColor]]"></latest-data-card>
+
+      <!-- <latest-data-card id="CoalPowerTag" class="layout__item"
+        card-title="Coal Power (MW)" tag="CoalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{coalPower}}></latest-data-card> -->
+
+      <!-- <latest-data-card id="GasPowerTag" class="layout__item"
+        card-title="Gas Power (MW)" tag="GasPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card> -->
+
+      <!-- <latest-data-card id="WindPowerTag" class="layout__item"
+        card-title="Wind Power (MW)" tag="WindPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card> -->
+    
     </span>
 
-    <aggregation-card id="average" class="layout__item"
+    <!-- <aggregation-card id="average" class="layout__item"
       card-title="Average Temperature" description="Average temperature over last hour" tag-name="Temperature-[[deviceName]]"
-      aggregation-type="avg" card-color="[[cardColor]]" duration="1h"></aggregation-card>
+      aggregation-type="avg" card-color="[[cardColor]]" duration="1h"></aggregation-card> -->
+
     <!-- Pie chart - requires all power tags -->
-    <pie-chart-card id="pieChart"
-        card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card>
+    <!-- <pie-chart-card id="pieChart"
+        card-title="Pie Chart" card-color="[[cardColor]]" pie-data="[[pieData]]"></pie-chart-card> -->
 
     <!-- Time Series plot for a single tag -->
-    <time-series-card id="card0"
+    <!-- <time-series-card id="card0"
         card-title="Time Series Card - One tag" tags="[[_createTagsArray('Demand')]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card>
-    <!-- Time Series plot for multiple tags (historic only) -->
-    <time-series-card id="card1"
-        card-title="Time Series Card - Multiple tags" tags="[[_createTagsArray('Demand','WindSpeed','Temperature')]]" hide-bar card-color="[[cardColor]]">
-    </time-series-card>
+    </time-series-card> -->
 
   </template>
   <script>
 
     // This is the device name you are using
-    var deviceName = 'xlp-54';
+    var deviceName = 'xlp-XX';
 
     Polymer({
 
@@ -123,8 +114,8 @@
           value: () => ({
               'output': [   // each "set" of thresholds has a name and then an array of threshold info for multiple cases
                 {
-                  upper: 800,
-                  lower: 400,
+                  upper: 1,
+                  lower: 0,
                   color: '#faa43a',
                   apply: 'card'
                 },
