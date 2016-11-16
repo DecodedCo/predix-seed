@@ -17,7 +17,7 @@
           content-type="application/json"
           on-response="_onResponse"
     ></iron-ajax>
-    <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]]">
+    <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]];min-height:205px;">
       <div class="layout">
         <div class="layout__item" hidden$="[[isStatic]]">[[tag]] <br>
           <h2 hidden$="[[empty]]" style="color: [[textColor]]"> [[latestTSPoint]]</h2>
