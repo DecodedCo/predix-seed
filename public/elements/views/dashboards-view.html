@@ -39,18 +39,18 @@
     <!-- Show latest value on one card per tag -->
     <span class="layout">
       <!-- Show realtime temperature -->
-      <!-- <latest-data-card id="temperatureTag" class="layout__item"
-        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
-      <!-- <latest-data-card id="humidityTag" class="layout__item"
-        card-title="Gearbox Humidity (%)" tag="Humidity-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card> -->
-      <!-- <latest-data-card id="CoalPowerTag" class="layout__item"
-        card-title="Coal Power (MW)" tag="CoalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{coalPower}}></latest-data-card> -->
-      <!-- <latest-data-card id="GasPowerTag" class="layout__item"
-        card-title="Gas Power (MW)" tag="GasPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card> -->
-      <!-- <latest-data-card id="WindPowerTag" class="layout__item"
-        card-title="Wind Power (MW)" tag="WindPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card> -->
-        <!-- <latest-data-card id="windSpeed" class="layout__item"
-          card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card> -->
+      <latest-data-card id="temperatureTag" class="layout__item"
+        card-title="Gearbox Temperature (&deg;C)" tag="Temperature-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+      <latest-data-card id="humidityTag" class="layout__item"
+        card-title="Gearbox Humidity (%)" tag="Humidity-[[deviceName]]" card-color="[[cardColor]]"></latest-data-card>
+      <latest-data-card id="CoalPowerTag" class="layout__item"
+        card-title="Coal Power (MW)" tag="CoalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{coalPower}}></latest-data-card>
+      <latest-data-card id="GasPowerTag" class="layout__item"
+        card-title="Gas Power (MW)" tag="GasPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{gasPower}}></latest-data-card>
+      <latest-data-card id="WindPowerTag" class="layout__item"
+        card-title="Wind Power (MW)" tag="WindPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{windPower}}></latest-data-card>
+        <latest-data-card id="windSpeed" class="layout__item"
+          card-title="Wind Speed (m/s)" tag="WindSpeed" card-color="[[cardColor]]"></latest-data-card>
       <latest-data-card id="TotalPowerTag" class="layout__item"
         card-title="Total Power (MW)" tag="TotalPower-[[deviceName]]" card-color="[[cardColor]]" bound-value={{output}}></latest-data-card>
       <latest-data-card id="demand" class="layout__item"
@@ -209,7 +209,7 @@
       _calculateDifference: function(var1, var2, returnVar) {
         if(this[var1] && this[var2]){
           //return this[var1] - this[var2];
-          this.set(returnVar, this[var1] - this[var2]);
+          this.set(returnVar, (this[var1] - this[var2]).toFixed(1));
         } else {
           this.set(returnVar, 'NA');
         }

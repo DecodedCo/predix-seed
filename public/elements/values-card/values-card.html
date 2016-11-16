@@ -87,7 +87,7 @@
       this.latestTSPoint = details.response.tags[0].results[0].values[0][1]; // latest.tags.0.results.0.values.0.1
     },
     round: function(item) {
-      item.results[0].values[0][1] = Math.round(item.results[0].values[0][1]);
+      item.results[0].values[0][1] = item.results[0].values[0][1].toFixed(1);
       return item;
     }
   });

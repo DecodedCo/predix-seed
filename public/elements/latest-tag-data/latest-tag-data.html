@@ -19,7 +19,7 @@
     ></iron-ajax>
     <px-card header-text="[[cardTitle]]" style="background-color:[[cardColor]];min-height:205px;">
       <div class="layout">
-        <div class="layout__item" hidden$="[[isStatic]]">[[tag]] <br>
+        <div class="layout__item" hidden$="[[isStatic]]">[[tagName]] <br>
           <h2 hidden$="[[empty]]" style="color: [[textColor]]"> [[latestTSPoint]]</h2>
           <h2 hidden$="[[!empty]]"> N/A</h2>
           <div hidden$="[[empty]]">* [[time]]</div>
@@ -49,6 +49,9 @@
       tag: {
         type: String,
         observer: '_tagChanged'
+      },
+      tagName: {
+        type: String,
       },
       data: {
         type: Array,
@@ -95,6 +98,7 @@
     },
     _tagChanged: function (){
       if(this.tag){
+          this.tagName = this.tag.replace(/-xlp-.*$/,"");
           this.latestPointBody = {
             "tags": [
               {
@@ -127,7 +131,7 @@
       this._updateData();
       this.data = details.response.tags;
       if(this.data[0].results[0].values.length > 0){
-        this.latestTSPoint = Math.round(details.response.tags[0].results[0].values[0][1]); // latest.tags.0.results.0.values.0.1
+        this.latestTSPoint = details.response.tags[0].results[0].values[0][1].toFixed(1); // latest.tags.0.results.0.values.0.1
         this.empty = !this._hasValue();
         this.time = "As of " + this._formatTime().slice(4,24);
         this._setThresholds();
